@@ -8,10 +8,10 @@
             "type": "node",
             "request": "launch",
             "name": "Launch program",
-            "program": "${workspaceFolder}/docs/js/bundle.js",
+            "program": "${workspaceFolder}/out/index.js",
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceFolder}/**/*.js"
+                "${workspaceFolder}/out/**/*.js"
             ],
             "console": "integratedTerminal",
             "preLaunchTask": "npm: build"

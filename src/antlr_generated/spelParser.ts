@@ -128,26 +128,12 @@ export class spelParser extends Parser {
 		let _localctx: DocumentContext = new DocumentContext(this._ctx, this.state);
 		this.enterRule(_localctx, 0, spelParser.RULE_document);
 		try {
-			this.state = 39;
-			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 0, this._ctx) ) {
-			case 1:
-				this.enterOuterAlt(_localctx, 1);
-				{
-				this.state = 36;
-				this.match(spelParser.BGNP);
-				this.state = 37;
-				this.block(0);
-				}
-				break;
-
-			case 2:
-				this.enterOuterAlt(_localctx, 2);
-				{
-				this.state = 38;
-				this.match(spelParser.BGNP);
-				}
-				break;
+			this.enterOuterAlt(_localctx, 1);
+			{
+			this.state = 36;
+			this.match(spelParser.BGNP);
+			this.state = 37;
+			this.block(0);
 			}
 		}
 		catch (re) {
@@ -171,7 +157,7 @@ export class spelParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 41;
+			this.state = 39;
 			this.block(0);
 			}
 		}
@@ -209,13 +195,13 @@ export class spelParser extends Parser {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			{
-			this.state = 44;
+			this.state = 42;
 			this.block_item();
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 50;
+			this.state = 48;
 			this._errHandler.sync(this);
-			_alt = this.interpreter.adaptivePredict(this._input, 1, this._ctx);
+			_alt = this.interpreter.adaptivePredict(this._input, 0, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					if (this._parseListeners != null) {
@@ -226,18 +212,18 @@ export class spelParser extends Parser {
 					{
 					_localctx = new BlockContext(_parentctx, _parentState);
 					this.pushNewRecursionContext(_localctx, _startState, spelParser.RULE_block);
-					this.state = 46;
+					this.state = 44;
 					if (!(this.precpred(this._ctx, 1))) {
 						throw new FailedPredicateException(this, "this.precpred(this._ctx, 1)");
 					}
-					this.state = 47;
+					this.state = 45;
 					_localctx._next = this.block_item();
 					}
 					}
 				}
-				this.state = 52;
+				this.state = 50;
 				this._errHandler.sync(this);
-				_alt = this.interpreter.adaptivePredict(this._input, 1, this._ctx);
+				_alt = this.interpreter.adaptivePredict(this._input, 0, this._ctx);
 			}
 			}
 		}
@@ -260,7 +246,7 @@ export class spelParser extends Parser {
 		let _localctx: Block_itemContext = new Block_itemContext(this._ctx, this.state);
 		this.enterRule(_localctx, 6, spelParser.RULE_block_item);
 		try {
-			this.state = 55;
+			this.state = 53;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case spelParser.ENCHANT:
@@ -268,7 +254,7 @@ export class spelParser extends Parser {
 			case spelParser.CAST:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 53;
+				this.state = 51;
 				this.statement();
 				}
 				break;
@@ -282,7 +268,7 @@ export class spelParser extends Parser {
 			case spelParser.IDENTIFIER:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 54;
+				this.state = 52;
 				this.declaration();
 				}
 				break;
@@ -309,36 +295,36 @@ export class spelParser extends Parser {
 		let _localctx: StatementContext = new StatementContext(this._ctx, this.state);
 		this.enterRule(_localctx, 8, spelParser.RULE_statement);
 		try {
-			this.state = 62;
+			this.state = 60;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 3, this._ctx) ) {
-			case 1:
+			switch (this._input.LA(1)) {
+			case spelParser.ENCHANT:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 57;
+				this.state = 55;
 				this.assignment();
 				}
 				break;
-
-			case 2:
+			case spelParser.CAST:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 58;
+				this.state = 56;
 				this.call();
 				}
 				break;
-
-			case 3:
+			case spelParser.IMP:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 59;
+				this.state = 57;
 				this.match(spelParser.IMP);
-				this.state = 60;
+				this.state = 58;
 				_localctx._name = this.match(spelParser.IDENTIFIER);
-				this.state = 61;
+				this.state = 59;
 				this.match(spelParser.T__0);
 				}
 				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (re) {
@@ -360,13 +346,13 @@ export class spelParser extends Parser {
 		let _localctx: List_of_statementsContext = new List_of_statementsContext(this._ctx, this.state);
 		this.enterRule(_localctx, 10, spelParser.RULE_list_of_statements);
 		try {
-			this.state = 68;
+			this.state = 66;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 4, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 3, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 64;
+				this.state = 62;
 				this.statement();
 				}
 				break;
@@ -374,9 +360,9 @@ export class spelParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 65;
+				this.state = 63;
 				this.statement();
-				this.state = 66;
+				this.state = 64;
 				_localctx._next = this.list_of_statements();
 				}
 				break;
@@ -401,20 +387,20 @@ export class spelParser extends Parser {
 		let _localctx: DeclarationContext = new DeclarationContext(this._ctx, this.state);
 		this.enterRule(_localctx, 12, spelParser.RULE_declaration);
 		try {
-			this.state = 73;
+			this.state = 71;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case spelParser.CRAFT:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 70;
+				this.state = 68;
 				this.variable_declaration();
 				}
 				break;
 			case spelParser.BGNC:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 71;
+				this.state = 69;
 				this.class_definition();
 				}
 				break;
@@ -426,7 +412,7 @@ export class spelParser extends Parser {
 			case spelParser.IDENTIFIER:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 72;
+				this.state = 70;
 				this.function_definition();
 				}
 				break;
@@ -453,13 +439,13 @@ export class spelParser extends Parser {
 		let _localctx: List_of_declarationsContext = new List_of_declarationsContext(this._ctx, this.state);
 		this.enterRule(_localctx, 14, spelParser.RULE_list_of_declarations);
 		try {
-			this.state = 79;
+			this.state = 77;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 6, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 5, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 75;
+				this.state = 73;
 				this.declaration();
 				}
 				break;
@@ -467,9 +453,9 @@ export class spelParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 76;
+				this.state = 74;
 				this.declaration();
-				this.state = 77;
+				this.state = 75;
 				_localctx._next = this.list_of_declarations();
 				}
 				break;
@@ -497,25 +483,27 @@ export class spelParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 81;
+			this.state = 79;
 			this.match(spelParser.CRAFT);
-			this.state = 83;
+			this.state = 81;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la === spelParser.ARTIFACT) {
 				{
-				this.state = 82;
+				this.state = 80;
 				this.match(spelParser.ARTIFACT);
 				}
 			}
 
-			this.state = 85;
+			this.state = 83;
+			_localctx._arg_type = this.type();
+			this.state = 84;
 			_localctx._name = this.match(spelParser.IDENTIFIER);
-			this.state = 86;
+			this.state = 85;
 			this.match(spelParser.BESTOW);
-			this.state = 87;
+			this.state = 86;
 			_localctx._value = this.expression(0);
-			this.state = 88;
+			this.state = 87;
 			this.match(spelParser.T__0);
 			}
 		}
@@ -540,21 +528,21 @@ export class spelParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 90;
+			this.state = 89;
 			_localctx._func_type = this.type();
-			this.state = 91;
+			this.state = 90;
 			this.match(spelParser.SPELL);
-			this.state = 92;
+			this.state = 91;
 			_localctx._name = this.match(spelParser.IDENTIFIER);
-			this.state = 93;
+			this.state = 92;
 			this.match(spelParser.SACRIFICE);
-			this.state = 94;
+			this.state = 93;
 			_localctx._params = this.list_typed_identifiers();
-			this.state = 95;
+			this.state = 94;
 			this.match(spelParser.T__1);
-			this.state = 96;
+			this.state = 95;
 			_localctx._statements = this.list_of_statements();
-			this.state = 97;
+			this.state = 96;
 			this.match(spelParser.TERMINUS);
 			}
 		}
@@ -579,15 +567,15 @@ export class spelParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 99;
+			this.state = 98;
 			this.match(spelParser.BGNC);
-			this.state = 100;
+			this.state = 99;
 			_localctx._name = this.match(spelParser.IDENTIFIER);
-			this.state = 101;
+			this.state = 100;
 			_localctx._statements = this.list_of_declarations();
-			this.state = 102;
+			this.state = 101;
 			this.match(spelParser.ENC);
-			this.state = 103;
+			this.state = 102;
 			this.match(spelParser.T__0);
 			}
 		}
@@ -610,21 +598,21 @@ export class spelParser extends Parser {
 		let _localctx: AssignmentContext = new AssignmentContext(this._ctx, this.state);
 		this.enterRule(_localctx, 22, spelParser.RULE_assignment);
 		try {
-			this.state = 119;
+			this.state = 118;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 8, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 7, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 105;
+				this.state = 104;
 				this.match(spelParser.ENCHANT);
+				this.state = 105;
+				_localctx._id = this.match(spelParser.IDENTIFIER);
 				this.state = 106;
-				this.match(spelParser.IDENTIFIER);
-				this.state = 107;
 				this.match(spelParser.WITH);
-				this.state = 108;
+				this.state = 107;
 				_localctx._value = this.expression(0);
-				this.state = 109;
+				this.state = 108;
 				this.match(spelParser.T__0);
 				}
 				break;
@@ -632,19 +620,19 @@ export class spelParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 111;
+				this.state = 110;
 				this.match(spelParser.ENCHANT);
+				this.state = 111;
+				_localctx._name = this.match(spelParser.IDENTIFIER);
 				this.state = 112;
-				this.match(spelParser.IDENTIFIER);
-				this.state = 113;
 				this.match(spelParser.OF);
+				this.state = 113;
+				_localctx._owner = this.match(spelParser.IDENTIFIER);
 				this.state = 114;
-				this.match(spelParser.IDENTIFIER);
-				this.state = 115;
 				this.match(spelParser.WITH);
-				this.state = 116;
+				this.state = 115;
 				_localctx._value = this.expression(0);
-				this.state = 117;
+				this.state = 116;
 				this.match(spelParser.T__0);
 				}
 				break;
@@ -669,45 +657,44 @@ export class spelParser extends Parser {
 		let _localctx: CallContext = new CallContext(this._ctx, this.state);
 		this.enterRule(_localctx, 24, spelParser.RULE_call);
 		try {
-			this.state = 135;
+			this.state = 134;
 			this._errHandler.sync(this);
-			switch (this._input.LA(1)) {
-			case spelParser.CAST:
+			switch ( this.interpreter.adaptivePredict(this._input, 8, this._ctx) ) {
+			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 121;
+				this.state = 120;
 				this.match(spelParser.CAST);
-				this.state = 122;
+				this.state = 121;
 				this.match(spelParser.IDENTIFIER);
-				this.state = 123;
+				this.state = 122;
 				this.match(spelParser.SACRIFICE);
-				this.state = 124;
+				this.state = 123;
 				_localctx._params = this.list_expressions();
-				this.state = 125;
+				this.state = 124;
 				this.match(spelParser.T__0);
 				}
 				break;
-			case spelParser.ENCHANT:
+
+			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
+				this.state = 126;
+				this.match(spelParser.CAST);
 				this.state = 127;
-				this.match(spelParser.ENCHANT);
+				_localctx._name = this.match(spelParser.IDENTIFIER);
 				this.state = 128;
-				this.match(spelParser.IDENTIFIER);
-				this.state = 129;
 				this.match(spelParser.OF);
+				this.state = 129;
+				_localctx._owner = this.match(spelParser.IDENTIFIER);
 				this.state = 130;
-				this.match(spelParser.IDENTIFIER);
-				this.state = 131;
 				this.match(spelParser.SACRIFICE);
-				this.state = 132;
+				this.state = 131;
 				_localctx._params = this.list_expressions();
-				this.state = 133;
+				this.state = 132;
 				this.match(spelParser.T__0);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
 			}
 		}
 		catch (re) {
@@ -732,7 +719,7 @@ export class spelParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 137;
+			this.state = 136;
 			_la = this._input.LA(1);
 			if (!(((((_la - 20)) & ~0x1F) === 0 && ((1 << (_la - 20)) & ((1 << (spelParser.POINTS - 20)) | (1 << (spelParser.PRECISE - 20)) | (1 << (spelParser.RUNE - 20)) | (1 << (spelParser.ABSOLUTE - 20)) | (1 << (spelParser.TOME - 20)) | (1 << (spelParser.IDENTIFIER - 20)))) !== 0))) {
 			this._errHandler.recoverInline(this);
@@ -765,15 +752,15 @@ export class spelParser extends Parser {
 		let _localctx: List_typed_identifiersContext = new List_typed_identifiersContext(this._ctx, this.state);
 		this.enterRule(_localctx, 28, spelParser.RULE_list_typed_identifiers);
 		try {
-			this.state = 147;
+			this.state = 146;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 10, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 9, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 139;
+				this.state = 138;
 				this.type();
-				this.state = 140;
+				this.state = 139;
 				this.match(spelParser.IDENTIFIER);
 				}
 				break;
@@ -781,13 +768,13 @@ export class spelParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 142;
+				this.state = 141;
 				this.type();
-				this.state = 143;
+				this.state = 142;
 				this.match(spelParser.IDENTIFIER);
-				this.state = 144;
+				this.state = 143;
 				this.match(spelParser.T__2);
-				this.state = 145;
+				this.state = 144;
 				_localctx._next = this.list_typed_identifiers();
 				}
 				break;
@@ -826,24 +813,24 @@ export class spelParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 153;
+			this.state = 152;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case spelParser.NUMBER:
 				{
-				this.state = 150;
+				this.state = 149;
 				_localctx._number_type = this.match(spelParser.NUMBER);
 				}
 				break;
 			case spelParser.STRING:
 				{
-				this.state = 151;
+				this.state = 150;
 				_localctx._string_type = this.match(spelParser.STRING);
 				}
 				break;
 			case spelParser.T__4:
 				{
-				this.state = 152;
+				this.state = 151;
 				_localctx._minus_expression_type = this.minus_expression();
 				}
 				break;
@@ -851,9 +838,9 @@ export class spelParser extends Parser {
 				throw new NoViableAltException(this);
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 172;
+			this.state = 171;
 			this._errHandler.sync(this);
-			_alt = this.interpreter.adaptivePredict(this._input, 13, this._ctx);
+			_alt = this.interpreter.adaptivePredict(this._input, 12, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					if (this._parseListeners != null) {
@@ -861,20 +848,20 @@ export class spelParser extends Parser {
 					}
 					_prevctx = _localctx;
 					{
-					this.state = 170;
+					this.state = 169;
 					this._errHandler.sync(this);
-					switch ( this.interpreter.adaptivePredict(this._input, 12, this._ctx) ) {
+					switch ( this.interpreter.adaptivePredict(this._input, 11, this._ctx) ) {
 					case 1:
 						{
 						_localctx = new ExpressionContext(_parentctx, _parentState);
 						this.pushNewRecursionContext(_localctx, _startState, spelParser.RULE_expression);
-						this.state = 155;
+						this.state = 154;
 						if (!(this.precpred(this._ctx, 5))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 5)");
 						}
-						this.state = 156;
+						this.state = 155;
 						_localctx._plus = this.match(spelParser.T__3);
-						this.state = 157;
+						this.state = 156;
 						this.expression(6);
 						}
 						break;
@@ -883,13 +870,13 @@ export class spelParser extends Parser {
 						{
 						_localctx = new ExpressionContext(_parentctx, _parentState);
 						this.pushNewRecursionContext(_localctx, _startState, spelParser.RULE_expression);
-						this.state = 158;
+						this.state = 157;
 						if (!(this.precpred(this._ctx, 4))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 4)");
 						}
-						this.state = 159;
+						this.state = 158;
 						_localctx._plus = this.match(spelParser.T__4);
-						this.state = 160;
+						this.state = 159;
 						this.expression(5);
 						}
 						break;
@@ -898,13 +885,13 @@ export class spelParser extends Parser {
 						{
 						_localctx = new ExpressionContext(_parentctx, _parentState);
 						this.pushNewRecursionContext(_localctx, _startState, spelParser.RULE_expression);
-						this.state = 161;
+						this.state = 160;
 						if (!(this.precpred(this._ctx, 3))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 3)");
 						}
-						this.state = 162;
+						this.state = 161;
 						_localctx._plus = this.match(spelParser.T__5);
-						this.state = 163;
+						this.state = 162;
 						this.expression(4);
 						}
 						break;
@@ -913,13 +900,13 @@ export class spelParser extends Parser {
 						{
 						_localctx = new ExpressionContext(_parentctx, _parentState);
 						this.pushNewRecursionContext(_localctx, _startState, spelParser.RULE_expression);
-						this.state = 164;
+						this.state = 163;
 						if (!(this.precpred(this._ctx, 2))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 2)");
 						}
-						this.state = 165;
+						this.state = 164;
 						_localctx._plus = this.match(spelParser.T__6);
-						this.state = 166;
+						this.state = 165;
 						this.expression(3);
 						}
 						break;
@@ -928,22 +915,22 @@ export class spelParser extends Parser {
 						{
 						_localctx = new ExpressionContext(_parentctx, _parentState);
 						this.pushNewRecursionContext(_localctx, _startState, spelParser.RULE_expression);
-						this.state = 167;
+						this.state = 166;
 						if (!(this.precpred(this._ctx, 1))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 1)");
 						}
-						this.state = 168;
+						this.state = 167;
 						_localctx._plus = this.match(spelParser.T__7);
-						this.state = 169;
+						this.state = 168;
 						this.expression(2);
 						}
 						break;
 					}
 					}
 				}
-				this.state = 174;
+				this.state = 173;
 				this._errHandler.sync(this);
-				_alt = this.interpreter.adaptivePredict(this._input, 13, this._ctx);
+				_alt = this.interpreter.adaptivePredict(this._input, 12, this._ctx);
 			}
 			}
 		}
@@ -966,13 +953,13 @@ export class spelParser extends Parser {
 		let _localctx: List_expressionsContext = new List_expressionsContext(this._ctx, this.state);
 		this.enterRule(_localctx, 32, spelParser.RULE_list_expressions);
 		try {
-			this.state = 180;
+			this.state = 179;
 			this._errHandler.sync(this);
-			switch ( this.interpreter.adaptivePredict(this._input, 14, this._ctx) ) {
+			switch ( this.interpreter.adaptivePredict(this._input, 13, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 175;
+				this.state = 174;
 				this.expression(0);
 				}
 				break;
@@ -980,11 +967,11 @@ export class spelParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 176;
+				this.state = 175;
 				this.expression(0);
-				this.state = 177;
+				this.state = 176;
 				this.match(spelParser.T__2);
-				this.state = 178;
+				this.state = 177;
 				_localctx._next = this.list_expressions();
 				}
 				break;
@@ -1011,9 +998,9 @@ export class spelParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 182;
+			this.state = 181;
 			this.match(spelParser.T__4);
-			this.state = 183;
+			this.state = 182;
 			this.expression(0);
 			}
 		}
@@ -1070,83 +1057,82 @@ export class spelParser extends Parser {
 	}
 
 	public static readonly _serializedATN: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03#\xBC\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03#\xBB\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
-		"\x13\t\x13\x03\x02\x03\x02\x03\x02\x05\x02*\n\x02\x03\x03\x03\x03\x03" +
-		"\x04\x03\x04\x03\x04\x03\x04\x03\x04\x07\x043\n\x04\f\x04\x0E\x046\v\x04" +
-		"\x03\x05\x03\x05\x05\x05:\n\x05\x03\x06\x03\x06\x03\x06\x03\x06\x03\x06" +
-		"\x05\x06A\n\x06\x03\x07\x03\x07\x03\x07\x03\x07\x05\x07G\n\x07\x03\b\x03" +
-		"\b\x03\b\x05\bL\n\b\x03\t\x03\t\x03\t\x03\t\x05\tR\n\t\x03\n\x03\n\x05" +
-		"\nV\n\n\x03\n\x03\n\x03\n\x03\n\x03\n\x03\v\x03\v\x03\v\x03\v\x03\v\x03" +
-		"\v\x03\v\x03\v\x03\v\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\r\x03\r\x03" +
-		"\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x05" +
-		"\rz\n\r\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E" +
-		"\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x05\x0E\x8A\n\x0E\x03" +
-		"\x0F\x03\x0F\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03" +
-		"\x10\x05\x10\x96\n\x10\x03\x11\x03\x11\x03\x11\x03\x11\x05\x11\x9C\n\x11" +
-		"\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11" +
-		"\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x07\x11\xAD\n\x11\f\x11" +
-		"\x0E\x11\xB0\v\x11\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x05\x12\xB7" +
-		"\n\x12\x03\x13\x03\x13\x03\x13\x03\x13\x02\x02\x04\x06 \x14\x02\x02\x04" +
-		"\x02\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02" +
-		"\x18\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02\x02\x03\x04\x02\x16\x1A" +
-		"\"\"\x02\xBE\x02)\x03\x02\x02\x02\x04+\x03\x02\x02\x02\x06-\x03\x02\x02" +
-		"\x02\b9\x03\x02\x02\x02\n@\x03\x02\x02\x02\fF\x03\x02\x02\x02\x0EK\x03" +
-		"\x02\x02\x02\x10Q\x03\x02\x02\x02\x12S\x03\x02\x02\x02\x14\\\x03\x02\x02" +
-		"\x02\x16e\x03\x02\x02\x02\x18y\x03\x02\x02\x02\x1A\x89\x03\x02\x02\x02" +
-		"\x1C\x8B\x03\x02\x02\x02\x1E\x95\x03\x02\x02\x02 \x9B\x03\x02\x02\x02" +
-		"\"\xB6\x03\x02\x02\x02$\xB8\x03\x02\x02\x02&\'\x07\r\x02\x02\'*\x05\x06" +
-		"\x04\x02(*\x07\r\x02\x02)&\x03\x02\x02\x02)(\x03\x02\x02\x02*\x03\x03" +
-		"\x02\x02\x02+,\x05\x06\x04\x02,\x05\x03\x02\x02\x02-.\b\x04\x01\x02./" +
-		"\x05\b\x05\x02/4\x03\x02\x02\x0201\f\x03\x02\x0213\x05\b\x05\x0220\x03" +
-		"\x02\x02\x0236\x03\x02\x02\x0242\x03\x02\x02\x0245\x03\x02\x02\x025\x07" +
-		"\x03\x02\x02\x0264\x03\x02\x02\x027:\x05\n\x06\x028:\x05\x0E\b\x0297\x03" +
-		"\x02\x02\x0298\x03\x02\x02\x02:\t\x03\x02\x02\x02;A\x05\x18\r\x02<A\x05" +
-		"\x1A\x0E\x02=>\x07\x1E\x02\x02>?\x07\"\x02\x02?A\x07\x03\x02\x02@;\x03" +
-		"\x02\x02\x02@<\x03\x02\x02\x02@=\x03\x02\x02\x02A\v\x03\x02\x02\x02BG" +
-		"\x05\n\x06\x02CD\x05\n\x06\x02DE\x05\f\x07\x02EG\x03\x02\x02\x02FB\x03" +
-		"\x02\x02\x02FC\x03\x02\x02\x02G\r\x03\x02\x02\x02HL\x05\x12\n\x02IL\x05" +
-		"\x16\f\x02JL\x05\x14\v\x02KH\x03\x02\x02\x02KI\x03\x02\x02\x02KJ\x03\x02" +
-		"\x02\x02L\x0F\x03\x02\x02\x02MR\x05\x0E\b\x02NO\x05\x0E\b\x02OP\x05\x10" +
-		"\t\x02PR\x03\x02\x02\x02QM\x03\x02\x02\x02QN\x03\x02\x02\x02R\x11\x03" +
-		"\x02\x02\x02SU\x07\x10\x02\x02TV\x07\x11\x02\x02UT\x03\x02\x02\x02UV\x03" +
-		"\x02\x02\x02VW\x03\x02\x02\x02WX\x07\"\x02\x02XY\x07\x12\x02\x02YZ\x05" +
-		" \x11\x02Z[\x07\x03\x02\x02[\x13\x03\x02\x02\x02\\]\x05\x1C\x0F\x02]^" +
-		"\x07\x13\x02\x02^_\x07\"\x02\x02_`\x07\x14\x02\x02`a\x05\x1E\x10\x02a" +
-		"b\x07\x04\x02\x02bc\x05\f\x07\x02cd\x07\x15\x02\x02d\x15\x03\x02\x02\x02" +
-		"ef\x07\x0E\x02\x02fg\x07\"\x02\x02gh\x05\x10\t\x02hi\x07\x0F\x02\x02i" +
-		"j\x07\x03\x02\x02j\x17\x03\x02\x02\x02kl\x07\x1B\x02\x02lm\x07\"\x02\x02" +
-		"mn\x07\x1C\x02\x02no\x05 \x11\x02op\x07\x03\x02\x02pz\x03\x02\x02\x02" +
-		"qr\x07\x1B\x02\x02rs\x07\"\x02\x02st\x07\x1D\x02\x02tu\x07\"\x02\x02u" +
-		"v\x07\x1C\x02\x02vw\x05 \x11\x02wx\x07\x03\x02\x02xz\x03\x02\x02\x02y" +
-		"k\x03\x02\x02\x02yq\x03\x02\x02\x02z\x19\x03\x02\x02\x02{|\x07\x1F\x02" +
-		"\x02|}\x07\"\x02\x02}~\x07\x14\x02\x02~\x7F\x05\"\x12\x02\x7F\x80\x07" +
-		"\x03\x02\x02\x80\x8A\x03\x02\x02\x02\x81\x82\x07\x1B\x02\x02\x82\x83\x07" +
-		"\"\x02\x02\x83\x84\x07\x1D\x02\x02\x84\x85\x07\"\x02\x02\x85\x86\x07\x14" +
-		"\x02\x02\x86\x87\x05\"\x12\x02\x87\x88\x07\x03\x02\x02\x88\x8A\x03\x02" +
-		"\x02\x02\x89{\x03\x02\x02\x02\x89\x81\x03\x02\x02\x02\x8A\x1B\x03\x02" +
-		"\x02\x02\x8B\x8C\t\x02\x02\x02\x8C\x1D\x03\x02\x02\x02\x8D\x8E\x05\x1C" +
-		"\x0F\x02\x8E\x8F\x07\"\x02\x02\x8F\x96\x03\x02\x02\x02\x90\x91\x05\x1C" +
-		"\x0F\x02\x91\x92\x07\"\x02\x02\x92\x93\x07\x05\x02\x02\x93\x94\x05\x1E" +
-		"\x10\x02\x94\x96\x03\x02\x02\x02\x95\x8D\x03\x02\x02\x02\x95\x90\x03\x02" +
-		"\x02\x02\x96\x1F\x03\x02\x02\x02\x97\x98\b\x11\x01\x02\x98\x9C\x07!\x02" +
-		"\x02\x99\x9C\x07#\x02\x02\x9A\x9C\x05$\x13\x02\x9B\x97\x03\x02\x02\x02" +
-		"\x9B\x99\x03\x02\x02\x02\x9B\x9A\x03\x02\x02\x02\x9C\xAE\x03\x02\x02\x02" +
-		"\x9D\x9E\f\x07\x02\x02\x9E\x9F\x07\x06\x02\x02\x9F\xAD\x05 \x11\b\xA0" +
-		"\xA1\f\x06\x02\x02\xA1\xA2\x07\x07\x02\x02\xA2\xAD\x05 \x11\x07\xA3\xA4" +
-		"\f\x05\x02\x02\xA4\xA5\x07\b\x02\x02\xA5\xAD\x05 \x11\x06\xA6\xA7\f\x04" +
-		"\x02\x02\xA7\xA8\x07\t\x02\x02\xA8\xAD\x05 \x11\x05\xA9\xAA\f\x03\x02" +
-		"\x02\xAA\xAB\x07\n\x02\x02\xAB\xAD\x05 \x11\x04\xAC\x9D\x03\x02\x02\x02" +
-		"\xAC\xA0\x03\x02\x02\x02\xAC\xA3\x03\x02\x02\x02\xAC\xA6\x03\x02\x02\x02" +
-		"\xAC\xA9\x03\x02\x02\x02\xAD\xB0\x03\x02\x02\x02\xAE\xAC\x03\x02\x02\x02" +
-		"\xAE\xAF\x03\x02\x02\x02\xAF!\x03\x02\x02\x02\xB0\xAE\x03\x02\x02\x02" +
-		"\xB1\xB7\x05 \x11\x02\xB2\xB3\x05 \x11\x02\xB3\xB4\x07\x05\x02\x02\xB4" +
-		"\xB5\x05\"\x12\x02\xB5\xB7\x03\x02\x02\x02\xB6\xB1\x03\x02\x02\x02\xB6" +
-		"\xB2\x03\x02\x02\x02\xB7#\x03\x02\x02\x02\xB8\xB9\x07\x07\x02\x02\xB9" +
-		"\xBA\x05 \x11\x02\xBA%\x03\x02\x02\x02\x11)49@FKQUy\x89\x95\x9B\xAC\xAE" +
-		"\xB6";
+		"\x13\t\x13\x03\x02\x03\x02\x03\x02\x03\x03\x03\x03\x03\x04\x03\x04\x03" +
+		"\x04\x03\x04\x03\x04\x07\x041\n\x04\f\x04\x0E\x044\v\x04\x03\x05\x03\x05" +
+		"\x05\x058\n\x05\x03\x06\x03\x06\x03\x06\x03\x06\x03\x06\x05\x06?\n\x06" +
+		"\x03\x07\x03\x07\x03\x07\x03\x07\x05\x07E\n\x07\x03\b\x03\b\x03\b\x05" +
+		"\bJ\n\b\x03\t\x03\t\x03\t\x03\t\x05\tP\n\t\x03\n\x03\n\x05\nT\n\n\x03" +
+		"\n\x03\n\x03\n\x03\n\x03\n\x03\n\x03\v\x03\v\x03\v\x03\v\x03\v\x03\v\x03" +
+		"\v\x03\v\x03\v\x03\f\x03\f\x03\f\x03\f\x03\f\x03\f\x03\r\x03\r\x03\r\x03" +
+		"\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x03\r\x05\ry" +
+		"\n\r\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03" +
+		"\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x03\x0E\x05\x0E\x89\n\x0E\x03\x0F" +
+		"\x03\x0F\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10\x03\x10" +
+		"\x05\x10\x95\n\x10\x03\x11\x03\x11\x03\x11\x03\x11\x05\x11\x9B\n\x11\x03" +
+		"\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03" +
+		"\x11\x03\x11\x03\x11\x03\x11\x03\x11\x03\x11\x07\x11\xAC\n\x11\f\x11\x0E" +
+		"\x11\xAF\v\x11\x03\x12\x03\x12\x03\x12\x03\x12\x03\x12\x05\x12\xB6\n\x12" +
+		"\x03\x13\x03\x13\x03\x13\x03\x13\x02\x02\x04\x06 \x14\x02\x02\x04\x02" +
+		"\x06\x02\b\x02\n\x02\f\x02\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18" +
+		"\x02\x1A\x02\x1C\x02\x1E\x02 \x02\"\x02$\x02\x02\x03\x04\x02\x16\x1A\"" +
+		"\"\x02\xBC\x02&\x03\x02\x02\x02\x04)\x03\x02\x02\x02\x06+\x03\x02\x02" +
+		"\x02\b7\x03\x02\x02\x02\n>\x03\x02\x02\x02\fD\x03\x02\x02\x02\x0EI\x03" +
+		"\x02\x02\x02\x10O\x03\x02\x02\x02\x12Q\x03\x02\x02\x02\x14[\x03\x02\x02" +
+		"\x02\x16d\x03\x02\x02\x02\x18x\x03\x02\x02\x02\x1A\x88\x03\x02\x02\x02" +
+		"\x1C\x8A\x03\x02\x02\x02\x1E\x94\x03\x02\x02\x02 \x9A\x03\x02\x02\x02" +
+		"\"\xB5\x03\x02\x02\x02$\xB7\x03\x02\x02\x02&\'\x07\r\x02\x02\'(\x05\x06" +
+		"\x04\x02(\x03\x03\x02\x02\x02)*\x05\x06\x04\x02*\x05\x03\x02\x02\x02+" +
+		",\b\x04\x01\x02,-\x05\b\x05\x02-2\x03\x02\x02\x02./\f\x03\x02\x02/1\x05" +
+		"\b\x05\x020.\x03\x02\x02\x0214\x03\x02\x02\x0220\x03\x02\x02\x0223\x03" +
+		"\x02\x02\x023\x07\x03\x02\x02\x0242\x03\x02\x02\x0258\x05\n\x06\x0268" +
+		"\x05\x0E\b\x0275\x03\x02\x02\x0276\x03\x02\x02\x028\t\x03\x02\x02\x02" +
+		"9?\x05\x18\r\x02:?\x05\x1A\x0E\x02;<\x07\x1E\x02\x02<=\x07\"\x02\x02=" +
+		"?\x07\x03\x02\x02>9\x03\x02\x02\x02>:\x03\x02\x02\x02>;\x03\x02\x02\x02" +
+		"?\v\x03\x02\x02\x02@E\x05\n\x06\x02AB\x05\n\x06\x02BC\x05\f\x07\x02CE" +
+		"\x03\x02\x02\x02D@\x03\x02\x02\x02DA\x03\x02\x02\x02E\r\x03\x02\x02\x02" +
+		"FJ\x05\x12\n\x02GJ\x05\x16\f\x02HJ\x05\x14\v\x02IF\x03\x02\x02\x02IG\x03" +
+		"\x02\x02\x02IH\x03\x02\x02\x02J\x0F\x03\x02\x02\x02KP\x05\x0E\b\x02LM" +
+		"\x05\x0E\b\x02MN\x05\x10\t\x02NP\x03\x02\x02\x02OK\x03\x02\x02\x02OL\x03" +
+		"\x02\x02\x02P\x11\x03\x02\x02\x02QS\x07\x10\x02\x02RT\x07\x11\x02\x02" +
+		"SR\x03\x02\x02\x02ST\x03\x02\x02\x02TU\x03\x02\x02\x02UV\x05\x1C\x0F\x02" +
+		"VW\x07\"\x02\x02WX\x07\x12\x02\x02XY\x05 \x11\x02YZ\x07\x03\x02\x02Z\x13" +
+		"\x03\x02\x02\x02[\\\x05\x1C\x0F\x02\\]\x07\x13\x02\x02]^\x07\"\x02\x02" +
+		"^_\x07\x14\x02\x02_`\x05\x1E\x10\x02`a\x07\x04\x02\x02ab\x05\f\x07\x02" +
+		"bc\x07\x15\x02\x02c\x15\x03\x02\x02\x02de\x07\x0E\x02\x02ef\x07\"\x02" +
+		"\x02fg\x05\x10\t\x02gh\x07\x0F\x02\x02hi\x07\x03\x02\x02i\x17\x03\x02" +
+		"\x02\x02jk\x07\x1B\x02\x02kl\x07\"\x02\x02lm\x07\x1C\x02\x02mn\x05 \x11" +
+		"\x02no\x07\x03\x02\x02oy\x03\x02\x02\x02pq\x07\x1B\x02\x02qr\x07\"\x02" +
+		"\x02rs\x07\x1D\x02\x02st\x07\"\x02\x02tu\x07\x1C\x02\x02uv\x05 \x11\x02" +
+		"vw\x07\x03\x02\x02wy\x03\x02\x02\x02xj\x03\x02\x02\x02xp\x03\x02\x02\x02" +
+		"y\x19\x03\x02\x02\x02z{\x07\x1F\x02\x02{|\x07\"\x02\x02|}\x07\x14\x02" +
+		"\x02}~\x05\"\x12\x02~\x7F\x07\x03\x02\x02\x7F\x89\x03\x02\x02\x02\x80" +
+		"\x81\x07\x1F\x02\x02\x81\x82\x07\"\x02\x02\x82\x83\x07\x1D\x02\x02\x83" +
+		"\x84\x07\"\x02\x02\x84\x85\x07\x14\x02\x02\x85\x86\x05\"\x12\x02\x86\x87" +
+		"\x07\x03\x02\x02\x87\x89\x03\x02\x02\x02\x88z\x03\x02\x02\x02\x88\x80" +
+		"\x03\x02\x02\x02\x89\x1B\x03\x02\x02\x02\x8A\x8B\t\x02\x02\x02\x8B\x1D" +
+		"\x03\x02\x02\x02\x8C\x8D\x05\x1C\x0F\x02\x8D\x8E\x07\"\x02\x02\x8E\x95" +
+		"\x03\x02\x02\x02\x8F\x90\x05\x1C\x0F\x02\x90\x91\x07\"\x02\x02\x91\x92" +
+		"\x07\x05\x02\x02\x92\x93\x05\x1E\x10\x02\x93\x95\x03\x02\x02\x02\x94\x8C" +
+		"\x03\x02\x02\x02\x94\x8F\x03\x02\x02\x02\x95\x1F\x03\x02\x02\x02\x96\x97" +
+		"\b\x11\x01\x02\x97\x9B\x07!\x02\x02\x98\x9B\x07#\x02\x02\x99\x9B\x05$" +
+		"\x13\x02\x9A\x96\x03\x02\x02\x02\x9A\x98\x03\x02\x02\x02\x9A\x99\x03\x02" +
+		"\x02\x02\x9B\xAD\x03\x02\x02\x02\x9C\x9D\f\x07\x02\x02\x9D\x9E\x07\x06" +
+		"\x02\x02\x9E\xAC\x05 \x11\b\x9F\xA0\f\x06\x02\x02\xA0\xA1\x07\x07\x02" +
+		"\x02\xA1\xAC\x05 \x11\x07\xA2\xA3\f\x05\x02\x02\xA3\xA4\x07\b\x02\x02" +
+		"\xA4\xAC\x05 \x11\x06\xA5\xA6\f\x04\x02\x02\xA6\xA7\x07\t\x02\x02\xA7" +
+		"\xAC\x05 \x11\x05\xA8\xA9\f\x03\x02\x02\xA9\xAA\x07\n\x02\x02\xAA\xAC" +
+		"\x05 \x11\x04\xAB\x9C\x03\x02\x02\x02\xAB\x9F\x03\x02\x02\x02\xAB\xA2" +
+		"\x03\x02\x02\x02\xAB\xA5\x03\x02\x02\x02\xAB\xA8\x03\x02\x02\x02\xAC\xAF" +
+		"\x03\x02\x02\x02\xAD\xAB\x03\x02\x02\x02\xAD\xAE\x03\x02\x02\x02\xAE!" +
+		"\x03\x02\x02\x02\xAF\xAD\x03\x02\x02\x02\xB0\xB6\x05 \x11\x02\xB1\xB2" +
+		"\x05 \x11\x02\xB2\xB3\x07\x05\x02\x02\xB3\xB4\x05\"\x12\x02\xB4\xB6\x03" +
+		"\x02\x02\x02\xB5\xB0\x03\x02\x02\x02\xB5\xB1\x03\x02\x02\x02\xB6#\x03" +
+		"\x02\x02\x02\xB7\xB8\x07\x07\x02\x02\xB8\xB9\x05 \x11\x02\xB9%\x03\x02" +
+		"\x02\x02\x1027>DIOSx\x88\x94\x9A\xAB\xAD\xB5";
 	public static __ATN: ATN;
 	public static get _ATN(): ATN {
 		if (!spelParser.__ATN) {
@@ -1160,8 +1146,8 @@ export class spelParser extends Parser {
 
 export class DocumentContext extends ParserRuleContext {
 	public BGNP(): TerminalNode { return this.getToken(spelParser.BGNP, 0); }
-	public block(): BlockContext | undefined {
-		return this.tryGetRuleContext(0, BlockContext);
+	public block(): BlockContext {
+		return this.getRuleContext(0, BlockContext);
 	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
@@ -1443,10 +1429,14 @@ export class List_of_declarationsContext extends ParserRuleContext {
 
 
 export class Variable_declarationContext extends ParserRuleContext {
+	public _arg_type: TypeContext;
 	public _name: Token;
 	public _value: ExpressionContext;
 	public CRAFT(): TerminalNode { return this.getToken(spelParser.CRAFT, 0); }
 	public BESTOW(): TerminalNode { return this.getToken(spelParser.BESTOW, 0); }
+	public type(): TypeContext {
+		return this.getRuleContext(0, TypeContext);
+	}
 	public IDENTIFIER(): TerminalNode { return this.getToken(spelParser.IDENTIFIER, 0); }
 	public expression(): ExpressionContext {
 		return this.getRuleContext(0, ExpressionContext);
@@ -1564,8 +1554,12 @@ export class Class_definitionContext extends ParserRuleContext {
 
 
 export class AssignmentContext extends ParserRuleContext {
+	public _id: Token;
 	public _value: ExpressionContext;
+	public _name: Token;
+	public _owner: Token;
 	public ENCHANT(): TerminalNode { return this.getToken(spelParser.ENCHANT, 0); }
+	public WITH(): TerminalNode { return this.getToken(spelParser.WITH, 0); }
 	public IDENTIFIER(): TerminalNode[];
 	public IDENTIFIER(i: number): TerminalNode;
 	public IDENTIFIER(i?: number): TerminalNode | TerminalNode[] {
@@ -1575,7 +1569,6 @@ export class AssignmentContext extends ParserRuleContext {
 			return this.getToken(spelParser.IDENTIFIER, i);
 		}
 	}
-	public WITH(): TerminalNode { return this.getToken(spelParser.WITH, 0); }
 	public expression(): ExpressionContext {
 		return this.getRuleContext(0, ExpressionContext);
 	}
@@ -1610,7 +1603,9 @@ export class AssignmentContext extends ParserRuleContext {
 
 export class CallContext extends ParserRuleContext {
 	public _params: List_expressionsContext;
-	public CAST(): TerminalNode | undefined { return this.tryGetToken(spelParser.CAST, 0); }
+	public _name: Token;
+	public _owner: Token;
+	public CAST(): TerminalNode { return this.getToken(spelParser.CAST, 0); }
 	public IDENTIFIER(): TerminalNode[];
 	public IDENTIFIER(i: number): TerminalNode;
 	public IDENTIFIER(i?: number): TerminalNode | TerminalNode[] {
@@ -1624,7 +1619,6 @@ export class CallContext extends ParserRuleContext {
 	public list_expressions(): List_expressionsContext {
 		return this.getRuleContext(0, List_expressionsContext);
 	}
-	public ENCHANT(): TerminalNode | undefined { return this.tryGetToken(spelParser.ENCHANT, 0); }
 	public OF(): TerminalNode | undefined { return this.tryGetToken(spelParser.OF, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);

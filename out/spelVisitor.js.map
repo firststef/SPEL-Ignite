@@ -1,1 +1,0 @@
-{"version":3,"file":"spelVisitor.js","sourceRoot":"","sources":["../src/spelVisitor.ts"],"names":[],"mappings":";;;AACA,qFAAiF;AAGjF,MAAM,WAAY,SAAQ,mDAAgC;IAC5C,aAAa;QACnB,OAAO;IACX,CAAC;IAED,aAAa,CAAC,GAAoB;QAC9B,OAAO,CAAC,GAAG,CAAC,KAAK,CAAC,CAAC;QAEnB,OAAO,CAAC,CAAC;IACb,CAAC;IAED,UAAU,CAAC,GAAiB;QAExB,OAAO,CAAC,CAAC;IACb,CAAC;CAEJ;AAGG,kCAAW"}

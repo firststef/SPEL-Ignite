@@ -1,2 +1,3 @@
-import { main } from '../src/index';
+import { run } from '../src/index';
 
+run();

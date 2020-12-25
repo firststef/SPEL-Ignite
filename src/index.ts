@@ -4,16 +4,9 @@ import { spelParser } from './antlr_generated/spelParser';
 import { SpelVisitor } from './spelVisitor';
 import { ErrorListener } from './errorListener';
 
-function run(){
+function compile(s: string){
     // Create the lexer and parser
-
-    let testStr = `
-    The tale begins.
-
-    craft artifact points basic_attack bestow 3.
-    `;
-
-    let inputStream = CharStreams.fromString(testStr);
+    let inputStream = CharStreams.fromString(s);
     let lexer = new spelLexer(inputStream);
     let tokenStream = new CommonTokenStream(lexer);
     let parser = new spelParser(tokenStream);
@@ -30,5 +23,5 @@ function run(){
 }
 
 export{
-    run
+    compile
 };

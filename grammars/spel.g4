@@ -8,6 +8,8 @@ WHITESPACE: [ \n\t\r]+ -> channel(1);
 BGNP: 'The tale begins.';
 BGNC: 'I summon thy name';
 ENC: 'and thy brethren';
+IMP: 'Legend tells of';
+
 CRAFT: 'craft';
 ARTIFACT: 'artifact';
 BESTOW: 'bestow';
@@ -22,7 +24,6 @@ TOME: 'tome';
 ENCHANT: 'enchant';
 WITH: 'with';
 OF: 'of';
-IMP: 'Legend tells of';
 CAST: 'cast';
 
 fragment DIGIT: [0-9];

@@ -28,8 +28,14 @@ class Variant{
     }
 }
 
+class SpelError{
+    
+}
+
 class SpelVisitor extends AbstractParseTreeVisitor<Variant> implements spelVisitor<Variant> {
     NEW_LINE = '\n';
+
+    Array<>
     is_in_class_definition = false;
 
     protected defaultResult(): Variant {
@@ -52,11 +58,11 @@ class SpelVisitor extends AbstractParseTreeVisitor<Variant> implements spelVisit
 
     visitBlock(ctx: BlockContext): Variant {
         if (ctx == undefined) return new Variant('');
-        if (ctx.block){
-            return new Variant(this.visitBlock(ctx.block()).toString() + this.NEW_LINE + (ctx.block_item ? this.visitBlock_item(ctx.block_item()).toString() : ''));
-        }
         if (ctx.block_item){
             return this.visitBlock_item(ctx.block_item());
+        }
+        if (ctx.block){
+            return new Variant(this.visitBlock(ctx.block()).toString() + this.NEW_LINE + (ctx.block_item ? this.visitBlock_item(ctx.block_item()).toString() : ''));
         }
         return new Variant('');
     }

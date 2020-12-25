@@ -1,6 +1,8 @@
 import { spelVisitor } from './antlr_generated/spelVisitor'
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor'
 import { AssignmentContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Function_definitionContext, Headless_documentContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, StatementContext, TypeContext, Variable_declarationContext } from './antlr_generated/spelParser'
+import { ParserRuleContext, Token } from 'antlr4ts';
+import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 
 class Param{
     name: string;
@@ -11,165 +13,321 @@ class Type{
     type: string;
 }
 
-class List_typed_identifiersData{
-    params: Array<Param>;
+/* 
+function getSourceRange(antlr4::tree::TerminalNode* node) {
+    return getSourceRange(node->getSymbol());
 }
-
-class Variant{
-    source: string;
-    data: List_typed_identifiersData|Type|{};
-
-    constructor(str: string, obj = {}){
-        this.source = str;
+function getSourceRange(const antlr4::ParserRuleContext* rule) {
+    return getSourceRange(rule->start, rule->stop);
+}
+*/
+function getSourceRange(start:Token|null, stop:Token|null) : SourceRange{
+    if (stop == null){
+        stop = start;
     }
 
-    toString(){
-        return this.source;
+    let start_index = 0;
+    let size = 1;
+    if (start) {
+        start_index = start.startIndex;
+        size        = start.startIndex - start_index + 1;
+    }
+    if (stop) {
+        const stop_index = stop.startIndex;
+        size = (stop_index >= start_index ? stop_index - start_index : start_index - stop_index) + 1;
+    }
+
+    return new SourceRange(start_index, size );
+}
+
+class SourceRange {
+    start: number;
+    size: number;
+
+    constructor(start: number, size: number){
+        this.start = start;
+        this.size = size;
     }
 }
 
 class SpelError{
-    
+    range: SourceRange;
+    message: string;
+
+    constructor(range: SourceRange, msg: string){
+        this.range = range;
+        this.message = msg;
+    }
 }
 
-class SpelVisitor extends AbstractParseTreeVisitor<Variant> implements spelVisitor<Variant> {
+// class SpelVisitorInterface<T> extends AbstractParseTreeVisitor<T> implements spelVisitor<T> {
+//     NEW_LINE = '\n';
+
+//     is_in_class_definition: boolean = false;
+//     errors: Array<SpelError> = new Array<SpelError>();
+
+//     checkNull(ctx: ParserRuleContext, field: any, what: string){
+//         if (!ctx){
+//             this.errors.push(new SpelError(new SourceRange(0, 0), what + 'cannot be unspecified'));
+//             return false;
+//         }
+//         if (!field){
+//             this.errors.push(new SpelError(new SourceRange(0, 0), what + 'cannot be unspecified'));
+//             return false;
+//         }
+//         return true;
+//     }
+
+//     protected defaultResult(): T {return;}
+
+//     visitDocument(ctx: DocumentContext):T {return;}
+
+//     visitHeadless_document(ctx: Headless_documentContext):T {return;}
+
+//     visitBlock(ctx: BlockContext):T {return;}
+
+//     visitBlock_item(ctx: Block_itemContext):T {return;}
+
+//     visitStatement(ctx: StatementContext):T {return;}
+
+//     visitList_of_statements(ctx: List_of_statementsContext):T {return;}
+
+//     visitDeclaration(ctx: DeclarationContext):T {return;}
+
+//     visitList_of_declarations(ctx: List_of_declarationsContext):T {return;}
+
+//     visitVariable_declaration(ctx: Variable_declarationContext):T {return;}
+
+//     visitFunction_definition(ctx: Function_definitionContext):T {return;}
+
+//     visitClass_definition(ctx: Class_definitionContext):T {return;}
+
+//     visitAssignment(ctx: AssignmentContext):T {return;}
+
+//     visitCall(ctx: CallContext):T {return;}
+
+//     visitType(ctx: TypeContext):T {return;}
+
+//     visitList_typed_identifiers(ctx: List_typed_identifiersContext):T {return;}
+
+//     visitExpression(ctx: ExpressionContext):T {return;}
+
+//     visitList_expressions(ctx: List_expressionsContext):T {return;}
+
+//     visitMinus_expression(ctx: Minus_expressionContext):T {return;}
+// }
+
+class SpelGenerateSourceVariant{
+    source: string|undefined
+    type?: string
+    typed_list?: Array<Param>
+}
+
+class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor<SpelGenerateSourceVariant> implements spelVisitor<SpelGenerateSourceVariant> {
     NEW_LINE = '\n';
 
-    Array<>
-    is_in_class_definition = false;
+    is_in_class_definition: boolean = false;
+    errors: Array<SpelError> = new Array<SpelError>();
 
-    protected defaultResult(): Variant {
+    protected defaultResult(): SpelGenerateSourceVariant {
         return;
     }
 
-    visitDocument(ctx: DocumentContext) {
-        if (ctx.block){
-            return new Variant('The tale begins.' + this.NEW_LINE + this.visitBlock(ctx.block()));
+    check(value:any, message:string){
+        if (!value){
+            this.errors.push(new SpelError(new SourceRange(0, 0), message));
+            return undefined;
         }
-        return new Variant('');
+        return value;
     }
 
-    visitHeadless_document(ctx: Headless_documentContext){
-        if (ctx.block){
+    checkNull(ctx: ParserRuleContext, field: any, what: string){
+        if (!ctx){
+            this.errors.push(new SpelError(new SourceRange(0, 0), what + 'cannot be unspecified'));
+            return false;
+        }
+        if (!field){
+            this.errors.push(new SpelError(new SourceRange(0, 0), what + 'cannot be unspecified'));
+            return false;
+        }
+        return true;
+    }
+
+    visitDocument(ctx: DocumentContext):SpelGenerateSourceVariant {
+        if (!this.checkNull(ctx, ctx.block(), 'block')) return;
+
+        if (ctx.block()){
+            let block = this.visitBlock(ctx.block());
+            if (!block?.source) return;
+
+            return {
+                source: 'Genesis();' + this.NEW_LINE + block.source
+            };
+        }
+    }
+
+    visitHeadless_document(ctx: Headless_documentContext): SpelGenerateSourceVariant{
+        if (!this.checkNull(ctx, ctx.block(), 'block')) return;
+
+        if (ctx.block()){
             return this.visitBlock(ctx.block());
         }
-        return new Variant('');
     }
 
-    visitBlock(ctx: BlockContext): Variant {
-        if (ctx == undefined) return new Variant('');
-        if (ctx.block_item){
+    visitBlock(ctx: BlockContext):SpelGenerateSourceVariant {
+        if (ctx._next){
+            let block = this.visitBlock(ctx.block());
+            if (!block?.source) return;
+
+            let block_item = this.visitBlock_item(ctx.block_item());
+            if (!block_item?.source) return;
+
+            return {source: block.source + this.NEW_LINE + block_item.source};
+        }
+        if (ctx.block_item()){
             return this.visitBlock_item(ctx.block_item());
         }
-        if (ctx.block){
-            return new Variant(this.visitBlock(ctx.block()).toString() + this.NEW_LINE + (ctx.block_item ? this.visitBlock_item(ctx.block_item()).toString() : ''));
-        }
-        return new Variant('');
     }
 
-    visitBlock_item(ctx: Block_itemContext){
-        if (ctx.statement){
+    visitBlock_item(ctx: Block_itemContext):SpelGenerateSourceVariant {
+        if (ctx.statement()){
             return this.visitStatement(ctx.statement());
         }
-        if (ctx.declaration){
+        if (ctx.declaration()){
             return this.visitDeclaration(ctx.declaration());
         }
-        return new Variant('');
     }
 
-    visitStatement(ctx: StatementContext){
-        if (ctx == undefined) return new Variant('');
-        if (ctx.assignment){
+    visitStatement(ctx: StatementContext):SpelGenerateSourceVariant {
+        if (ctx.assignment()){
             return this.visitAssignment(ctx.assignment());
         }
-        if (ctx.call){
+        if (ctx.call()){
             return this.visitCall(ctx.call());
         }
-        if (ctx.IMP && ctx.IDENTIFIER){
-            return new Variant('import * as ' + ctx.IDENTIFIER() + ' from \'' + ctx.IDENTIFIER() + '\'');
+        if (ctx.IMP() && ctx.IDENTIFIER()){
+            return {
+                source: 'import * as ' + ctx.IDENTIFIER() + ' from \'' + ctx.IDENTIFIER() + '\''
+            }
         }
-        return new Variant('');
     }
 
-    visitList_of_statements(ctx: List_of_statementsContext): Variant{
+    visitList_of_statements(ctx: List_of_statementsContext):SpelGenerateSourceVariant {
         if (ctx.list_of_statements()){
-            return new Variant(this.visitStatement(ctx.statement()).toString() + this.NEW_LINE + this.visitList_of_statements(ctx.list_of_statements()).toString());
+            let statement = this.visitStatement(ctx.statement());
+            if (!statement?.source) return;
+
+            let list_of_statements = this.visitList_of_statements(ctx.list_of_statements());
+            if (!list_of_statements?.source) return;
+            
+            return {
+                source: statement.source + this.NEW_LINE + list_of_statements.source
+            }
         }
-        if (ctx.statement){
+        if (ctx.statement()){
             return this.visitStatement(ctx.statement());
         }
-        return new Variant('');
     }
 
-    visitDeclaration(ctx: DeclarationContext){
-        if (ctx.variable_declaration){
+    visitDeclaration(ctx: DeclarationContext):SpelGenerateSourceVariant {
+        if (ctx.variable_declaration()){
             return this.visitVariable_declaration(ctx.variable_declaration());
         }
-        if (ctx.class_definition){
+        if (ctx.class_definition()){
             return this.visitClass_definition(ctx.class_definition());
         }
-        if (ctx.function_definition){
+        if (ctx.function_definition()){
             return this.visitFunction_definition(ctx.function_definition());
         }
-        return new Variant('');
     }
 
-    visitList_of_declarations(ctx: List_of_declarationsContext): Variant{
+    visitList_of_declarations(ctx: List_of_declarationsContext):SpelGenerateSourceVariant {
         if (ctx.list_of_declarations()){
-            return new Variant(this.visitDeclaration(ctx.declaration()).toString() + this.NEW_LINE + this.visitList_of_declarations(ctx.list_of_declarations()).toString());
+            let declaration = this.visitDeclaration(ctx.declaration());
+            if (!declaration?.source) return;
+
+            let list_of_declarations = this.visitList_of_declarations(ctx.list_of_declarations());
+            if (!list_of_declarations?.source) return;
+
+            return {
+                source: declaration.source + this.NEW_LINE + list_of_declarations.source
+            }
         }
-        if (ctx.declaration){
+        if (ctx.declaration()){
             return this.visitDeclaration(ctx.declaration());
         }
-        return new Variant('');
     }
 
-    visitVariable_declaration(ctx: Variable_declarationContext){
-        if (ctx.IDENTIFIER && ctx.expression){
-            return new Variant((this.is_in_class_definition ? 'let ' : '') + ctx.IDENTIFIER() + ' = ' + this.visitExpression(ctx.expression()),
-            <Type>{type: this.visitType(ctx.type()).toString()});
+    visitVariable_declaration(ctx: Variable_declarationContext):SpelGenerateSourceVariant {
+        if (ctx.IDENTIFIER() && ctx.expression()){
+            let expr = this.visitExpression(ctx.expression());
+            if (!expr?.source) return;
+
+            let type = this.visitType(ctx.type());
+            if (!type?.source) return;
+
+            return {
+                source: (this.is_in_class_definition ? 'let ' : '') + ctx.IDENTIFIER() + ' = ' + expr.source,
+                'type': type?.source
+            }
         }
-        return new Variant('');
     }
 
-    visitFunction_definition(ctx: Function_definitionContext){
+    visitFunction_definition(ctx: Function_definitionContext):SpelGenerateSourceVariant {
         if (ctx.type && ctx.IDENTIFIER && ctx.list_typed_identifiers && ctx.list_of_statements){
             let result = this.visitList_typed_identifiers(ctx.list_typed_identifiers());
-            (this.is_in_class_definition ? 'function ' : '') + ctx.IDENTIFIER() 
-            + '(' + (<List_typed_identifiersData>result.data).params.map((p: Param) => p.name).join(',') + ')' + this.NEW_LINE +
-            + '{' +  this.NEW_LINE 
-            + this.visitList_of_statements(ctx.list_of_statements()).toString() + this.NEW_LINE 
-            + '}';
+            if (!result?.typed_list || !result?.source) return;
+
+            let statements = this.visitList_of_statements(ctx.list_of_statements());
+            if (!statements?.source) return;
+            
+            return {
+                source:(this.is_in_class_definition ? 'function ' : '') + ctx.IDENTIFIER() 
+                    + '(' + result.source + ')' + this.NEW_LINE +
+                    + '{' +  this.NEW_LINE 
+                    + statements.source + this.NEW_LINE 
+                    + '}'
+            };
         }
-        return new Variant('');
     }
 
-    visitClass_definition(ctx: Class_definitionContext){
+    visitClass_definition(ctx: Class_definitionContext):SpelGenerateSourceVariant {
         if (ctx.IDENTIFIER && ctx.list_of_declarations){
             let old_is_in_class_definition = this.is_in_class_definition;
             this.is_in_class_definition = true;
             let result = this.visitList_of_declarations(ctx.list_of_declarations());
             this.is_in_class_definition = old_is_in_class_definition;
-            return new Variant('class ' + ctx.IDENTIFIER() + ' { ' + result.toString() + '}');
+            if (!result?.source) return;
+
+            return {
+                source: 'class ' + ctx.IDENTIFIER() + ' { ' + result.toString() + '}'
+            }
         }
-        return new Variant('');
     }
 
-    visitAssignment(ctx: AssignmentContext){
+    visitAssignment(ctx: AssignmentContext):SpelGenerateSourceVariant{
         if (ctx._name && ctx._value){
-            return new Variant((ctx._owner ? ctx._owner.text + '.' : '') + ctx._name.text + ' = ' + this.visitExpression(ctx.expression()).toString());
+            let expr = this.visitExpression(ctx.expression());
+            if (!expr?.source) return;
+
+            return {
+                source: (ctx._owner ? ctx._owner.text + '.' : '') + ctx._name.text + ' = ' + expr.source + ';'
+            } 
         }
-        return new Variant('');
     }
 
-    visitCall(ctx: CallContext){
+    visitCall(ctx: CallContext):SpelGenerateSourceVariant{
         if (ctx._name && ctx._params){
-            return new Variant((ctx._owner ? ctx._owner.text + '.' : '') + ctx._name.text + '(' + this.visitList_expressions(ctx.list_expressions()).toString() + ')');
+            let expr = this.visitList_expressions(ctx.list_expressions());
+            if (!expr?.source) return;
+            
+            return {
+                source: (ctx._owner ? ctx._owner.text + '.' : '') + ctx._name.text + '(' + expr.source + ')'
+            }
         }
-        return new Variant('');
     }
 
-    visitType(ctx: TypeContext){
+    visitType(ctx: TypeContext):SpelGenerateSourceVariant{
         if (ctx.POINTS){
             return this.visitTerminal(ctx.POINTS());
         }
@@ -187,50 +345,66 @@ class SpelVisitor extends AbstractParseTreeVisitor<Variant> implements spelVisit
         }
     }
 
-    visitList_typed_identifiers(ctx: List_typed_identifiersContext): Variant{
+    visitTerminal(ctx: TerminalNode):SpelGenerateSourceVariant{
+        return {
+            source: ctx.toString() //todo
+        }
+    }
+
+    visitList_typed_identifiers(ctx: List_typed_identifiersContext): SpelGenerateSourceVariant{
         if (ctx.type && ctx.IDENTIFIER){
             if (ctx._next){
                 let res = this.visitList_typed_identifiers(ctx.list_typed_identifiers());
-                return new Variant('', [
-                    <Param>{
-                        name: this.visit(ctx.IDENTIFIER()).toString(),
-                        type: this.visitType(ctx.type()).toString()
-                    }
-                ].concat((<List_typed_identifiersData>res.data).params)
-                );
+                // return new Variant('', [
+                //     <Param>{
+                //         name: this.visit(ctx.IDENTIFIER()).toString(),
+                //         type: this.visitType(ctx.type()).toString()
+                //     }
+                // ].concat((<List_typed_identifiersData>res.data).params)
+                // );
             }
-            return new Variant('', { params:[
-                <Param>{
-                    name: this.visit(ctx.IDENTIFIER()).toString(),
-                    type: this.visitType(ctx.type()).toString()
-                }
-            ]});
+            // return new Variant('', { params:[
+            //     <Param>{
+            //         name: this.visit(ctx.IDENTIFIER()).toString(),
+            //         type: this.visitType(ctx.type()).toString()
+            //     }
+            // ]});
+
+            //todo
         }
-        return new Variant('');
+        return {
+            source:''
+        }
     }
 
     visitExpression(ctx: ExpressionContext){
         if (ctx.NUMBER){
             return this.visitTerminal(ctx.NUMBER());
         }
-        return new Variant('');
     }
 
-    visitList_expressions(ctx: List_expressionsContext): Variant{
+    visitList_expressions(ctx: List_expressionsContext):SpelGenerateSourceVariant {
         if (ctx.list_expressions()){
-            return new Variant(this.visitExpression(ctx.expression()).toString() + this.NEW_LINE + this.visitList_expressions(ctx.list_expressions()).toString());
+            let expr = this.visitExpression(ctx.expression());
+            if (!expr?.source) return;
+
+            let list_expr = this.visitList_expressions(ctx.list_expressions());
+            if (!list_expr?.source) return;
+
+            return {
+                source: expr.source + this.NEW_LINE + list_expr.source
+            }
         }
         if (ctx.expression){
             return this.visitExpression(ctx.expression());
         }
-        return new Variant('');
     }
 
     visitMinus_expression(ctx: Minus_expressionContext){
-        return new Variant('');
+        return {source:''};
     }
 }
 
 export{
-    SpelVisitor
+    SpelGenerateSourceVisitor
 };

@@ -1,7 +1,7 @@
 import { ANTLRInputStream, CharStreams, CommonTokenStream } from 'antlr4ts';
 import { spelLexer } from './antlr_generated/spelLexer';
 import { spelParser } from './antlr_generated/spelParser';
-import { SpelVisitor } from './spelVisitor';
+import { SpelGenerateSourceVisitor } from './spelVisitor';
 import { ErrorListener } from './errorListener';
 
 function compile(s: string){
@@ -18,7 +18,7 @@ function compile(s: string){
     // Parse the input, where `compilationUnit` is whatever entry point you defined
     let tree = parser.document();
 
-    const spelVisitor = new SpelVisitor();
+    const spelVisitor = new SpelGenerateSourceVisitor();
     return spelVisitor.visit(tree);
 }
 

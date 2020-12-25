@@ -81,7 +81,7 @@ list_of_declarations
     ;
 
 variable_declaration
-    : CRAFT ARTIFACT? name = IDENTIFIER BESTOW value = expression '.'
+    : CRAFT ARTIFACT? arg_type = type name = IDENTIFIER BESTOW value = expression '.'
     ;
 
 function_definition
@@ -93,13 +93,13 @@ class_definition
     ;
 
 assignment
-    : ENCHANT IDENTIFIER WITH value = expression '.'
-    | ENCHANT IDENTIFIER OF IDENTIFIER WITH value = expression '.'
+    : ENCHANT id = IDENTIFIER WITH value = expression '.'
+    | ENCHANT name = IDENTIFIER OF owner = IDENTIFIER WITH value = expression '.'
     ;
 
 call
     : CAST IDENTIFIER SACRIFICE params = list_expressions '.'
-    | ENCHANT IDENTIFIER OF IDENTIFIER SACRIFICE params = list_expressions '.'
+    | CAST name = IDENTIFIER OF owner = IDENTIFIER SACRIFICE params = list_expressions '.'
     ;
 
 type

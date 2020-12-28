@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ErrorListener = void 0;
 const antlr4 = require('antlr4');
 const path = require('path');
-const { SyntaxGenericError } = require(path.resolve('out', 'error', 'helper'));
+const { SyntaxGenericError } = require('./error/helper');
 /**
  * Custom Error Listener
  *

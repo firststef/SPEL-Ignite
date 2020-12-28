@@ -6,9 +6,14 @@
     "target": "es2019",
     "lib": ["ES2019"],
     "outDir": "out",
-    "rootDir": "src"
+    "rootDir": "src",
+    "declaration": true
   },
   "include": [
     "src/**/*"
   ],
+  "exclude": [
+    "node_modules",
+    "out"
+  ]
 }

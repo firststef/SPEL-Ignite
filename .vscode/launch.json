@@ -8,10 +8,10 @@
             "type": "node",
             "request": "launch",
             "name": "Launch program",
-            "program": "${workspaceFolder}/docs/js/bundle.js",
+            "program": "${workspaceFolder}/out/index.js",
             "sourceMaps": true,
             "outFiles": [
-                "${workspaceFolder}/**/*.js"
+                "${workspaceFolder}/out/**/*.js"
             ],
             "console": "integratedTerminal",
             "preLaunchTask": "npm: build"
@@ -19,12 +19,12 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Mocha Current File",
+            "name": "Mocha Tests",
             "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
             "args": [
               "--no-timeouts",
               "--colors",
-              "${file}",
+              "${workspaceFolder}/tests/**/*",
               "--require",
               "ts-node/register"
             ],

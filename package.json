@@ -1,8 +1,9 @@
 {
   "name": "spells",
   "version": "1.0.0",
-  "description": " ",
+  "description": "Spel language compiler",
   "main": "out/index.js",
+  "types": "out/index.d.ts",
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -b",
@@ -12,7 +13,7 @@
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
     "antlr4ts": "cd src && cd antlr_generated && antlr4ts -visitor ../../grammars/spel.g4"
   },
-  "author": "",
+  "author": "firststef",
   "license": "",
   "devDependencies": {
     "@types/chai": "^4.2.14",
@@ -30,5 +31,9 @@
     "antlr4": "^4.9.0",
     "antlr4ts": "^0.5.0-alpha.3"
   },
-  "types": "out/index.d.ts"
+  "files": ["out/**/*"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/firststef/SPEL-Ignite.git"
+  }
 }

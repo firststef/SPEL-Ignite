@@ -406,5 +406,6 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor<SpelGenerateSou
 }
 
 export{
-    SpelGenerateSourceVisitor
+    SpelGenerateSourceVisitor,
+    SpelGenerateSourceVariant
 };

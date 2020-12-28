@@ -1,7 +1,10 @@
 import { ANTLRInputStream, CharStreams, CommonTokenStream } from 'antlr4ts';
 import { spelLexer } from './antlr_generated/spelLexer';
 import { spelParser } from './antlr_generated/spelParser';
-import { SpelGenerateSourceVisitor } from './spelVisitor';
+import { 
+    SpelGenerateSourceVisitor,
+    SpelGenerateSourceVariant
+} from './spelVisitor';
 import { ErrorListener } from './errorListener';
 
 function compile(s: string){

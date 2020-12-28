@@ -15,14 +15,25 @@ function compile(s: string){
     let parser = new spelParser(tokenStream);
     parser.removeErrorListeners();
 
-    //const listener = new ErrorListener();
-    //parser.addErrorListener(listener);
+    const listener = new ErrorListener();
+    parser.addErrorListener(listener);
 
-    // Parse the input, where `compilationUnit` is whatever entry point you defined
-    let tree = parser.document();
+    try{
+        // Parse the input, where `compilationUnit` is whatever entry point you defined
+        let tree = parser.document();
 
-    const spelVisitor = new SpelGenerateSourceVisitor();
-    return spelVisitor.visit(tree);
+        const spelVisitor = new SpelGenerateSourceVisitor();
+        return {
+            status: 'ok',
+            result: spelVisitor.visit(tree)
+        };
+    }
+    catch(e){
+        return{
+            status: 'error',
+            result: e.toString()
+        }
+    }
 }
 
 export{

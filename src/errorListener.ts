@@ -1,7 +1,7 @@
 const antlr4 = require('antlr4');
 const path = require('path');
 
-const {SyntaxGenericError} = require(path.resolve('src', 'error', 'helper'));
+const {SyntaxGenericError} = require('./error/helper');
 
 /**
  * Custom Error Listener

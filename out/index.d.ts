@@ -1,3 +1,5 @@
-import { SpelGenerateSourceVariant } from './spelVisitor';
-declare function compile(s: string): SpelGenerateSourceVariant;
+declare function compile(s: string): {
+    status: string;
+    result: any;
+};
 export { compile };

@@ -15,10 +15,21 @@ function compile(s) {
     parser.removeErrorListeners();
     const listener = new errorListener_1.ErrorListener();
     parser.addErrorListener(listener);
-    // Parse the input, where `compilationUnit` is whatever entry point you defined
-    let tree = parser.document();
-    const spelVisitor = new spelVisitor_1.SpelGenerateSourceVisitor();
-    return spelVisitor.visit(tree);
+    try {
+        // Parse the input, where `compilationUnit` is whatever entry point you defined
+        let tree = parser.document();
+        const spelVisitor = new spelVisitor_1.SpelGenerateSourceVisitor();
+        return {
+            status: 'ok',
+            result: spelVisitor.visit(tree)
+        };
+    }
+    catch (e) {
+        return {
+            status: 'error',
+            result: e.toString()
+        };
+    }
 }
 exports.compile = compile;
 //# sourceMappingURL=index.js.map

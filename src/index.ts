@@ -15,8 +15,8 @@ function compile(s: string){
     let parser = new spelParser(tokenStream);
     parser.removeErrorListeners();
 
-    const listener = new ErrorListener();
-    parser.addErrorListener(listener);
+    //const listener = new ErrorListener();
+    //parser.addErrorListener(listener);
 
     // Parse the input, where `compilationUnit` is whatever entry point you defined
     let tree = parser.document();

@@ -42,7 +42,7 @@ fragment STRING_CHAR: ~'\uFFFF'; // EFECTIV ULTIMUL DIN LEXER
 
 document
     : BGNP block
-    // | BGNP 
+    | BGNP 
     ;
 
 headless_document

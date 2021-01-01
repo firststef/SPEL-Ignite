@@ -22,21 +22,21 @@ export declare class spelParser extends Parser {
     static readonly BGNP = 11;
     static readonly BGNC = 12;
     static readonly ENC = 13;
-    static readonly CRAFT = 14;
-    static readonly ARTIFACT = 15;
-    static readonly BESTOW = 16;
-    static readonly SPELL = 17;
-    static readonly SACRIFICE = 18;
-    static readonly TERMINUS = 19;
-    static readonly POINTS = 20;
-    static readonly PRECISE = 21;
-    static readonly RUNE = 22;
-    static readonly ABSOLUTE = 23;
-    static readonly TOME = 24;
-    static readonly ENCHANT = 25;
-    static readonly WITH = 26;
-    static readonly OF = 27;
-    static readonly IMP = 28;
+    static readonly IMP = 14;
+    static readonly CRAFT = 15;
+    static readonly ARTIFACT = 16;
+    static readonly BESTOW = 17;
+    static readonly SPELL = 18;
+    static readonly SACRIFICE = 19;
+    static readonly TERMINUS = 20;
+    static readonly POINTS = 21;
+    static readonly PRECISE = 22;
+    static readonly RUNE = 23;
+    static readonly ABSOLUTE = 24;
+    static readonly TOME = 25;
+    static readonly ENCHANT = 26;
+    static readonly WITH = 27;
+    static readonly OF = 28;
     static readonly CAST = 29;
     static readonly CHARACTER = 30;
     static readonly NUMBER = 31;
@@ -98,7 +98,7 @@ export declare class spelParser extends Parser {
 }
 export declare class DocumentContext extends ParserRuleContext {
     BGNP(): TerminalNode;
-    block(): BlockContext;
+    block(): BlockContext | undefined;
     constructor(parent: ParserRuleContext | undefined, invokingState: number);
     get ruleIndex(): number;
     enterRule(listener: spelListener): void;

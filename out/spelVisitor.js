@@ -220,7 +220,7 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor_1.AbstractParse
         }
     }
     visitFunction_definition(ctx) {
-        if (ctx.type && ctx.IDENTIFIER && ctx.list_typed_identifiers && ctx.list_of_statements) {
+        if (ctx.type() && ctx.IDENTIFIER() && ctx.list_typed_identifiers() && ctx.list_of_statements()) {
             let result = this.visitList_typed_identifiers(ctx.list_typed_identifiers());
             if (!(result === null || result === void 0 ? void 0 : result.typed_list) || !(result === null || result === void 0 ? void 0 : result.source))
                 return;
@@ -237,7 +237,7 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor_1.AbstractParse
         }
     }
     visitClass_definition(ctx) {
-        if (ctx.IDENTIFIER && ctx.list_of_declarations) {
+        if (ctx.IDENTIFIER() && ctx.list_of_declarations()) {
             let old_is_in_class_definition = this.is_in_class_definition;
             this.is_in_class_definition = true;
             let result = this.visitList_of_declarations(ctx.list_of_declarations());
@@ -270,19 +270,19 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor_1.AbstractParse
         }
     }
     visitType(ctx) {
-        if (ctx.POINTS) {
+        if (ctx.POINTS()) {
             return this.visitTerminal(ctx.POINTS());
         }
-        if (ctx.PRECISE) {
+        if (ctx.PRECISE()) {
             return this.visitTerminal(ctx.PRECISE());
         }
-        if (ctx.RUNE) {
+        if (ctx.RUNE()) {
             return this.visitTerminal(ctx.RUNE());
         }
-        if (ctx.TOME) {
+        if (ctx.TOME()) {
             return this.visitTerminal(ctx.TOME());
         }
-        if (ctx.IDENTIFIER) {
+        if (ctx.IDENTIFIER()) {
             return this.visitTerminal(ctx.IDENTIFIER());
         }
     }
@@ -292,7 +292,7 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor_1.AbstractParse
         };
     }
     visitList_typed_identifiers(ctx) {
-        if (ctx.type && ctx.IDENTIFIER) {
+        if (ctx.type() && ctx.IDENTIFIER()) {
             if (ctx._next) {
                 let res = this.visitList_typed_identifiers(ctx.list_typed_identifiers());
                 // return new Variant('', [
@@ -316,7 +316,7 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor_1.AbstractParse
         };
     }
     visitExpression(ctx) {
-        if (ctx.NUMBER) {
+        if (ctx.NUMBER()) {
             return this.visitTerminal(ctx.NUMBER());
         }
     }
@@ -332,7 +332,7 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor_1.AbstractParse
                 source: expr.source + this.NEW_LINE + list_expr.source
             };
         }
-        if (ctx.expression) {
+        if (ctx.expression()) {
             return this.visitExpression(ctx.expression());
         }
     }

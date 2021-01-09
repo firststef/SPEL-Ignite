@@ -5,9 +5,10 @@ grammar spel;
 COMMENT: '***' (~'*')* -> channel(HIDDEN);
 WHITESPACE: [ \n\t\r]+ -> channel(1);
 
+BGND: 'In the beginning...';
 BGNP: 'The tale begins.';
 BGNC: 'I summon thy name';
-ENC: 'and thy brethren';
+ENC: 'and thy brethren.';
 IMP: 'Legend tells of';
 
 CRAFT: 'craft';
@@ -34,15 +35,12 @@ NUMBER: DIGIT+;
 IDENTIFIER: (CHARACTER | '_') (CHARACTER | '_' | DIGIT)*;
 STRING: COMMA .+? COMMA;
 
-//...
-
-fragment STRING_CHAR: ~'\uFFFF'; // EFECTIV ULTIMUL DIN LEXER
+fragment STRING_CHAR: ~'\uFFFF';
 
 /* Parser rules */
 
 document
-    : BGNP block
-    | BGNP 
+    : (BGND declr_block = block)? BGNP (program = block)?
     ;
 
 headless_document
@@ -50,8 +48,8 @@ headless_document
     ;
 
 block
-    :   block_item
-    |   block next = block_item
+    :   block next = block_item
+    |   block_item
     ;
 
 block_item
@@ -62,12 +60,21 @@ block_item
 statement
     : assignment
     | call
-    | IMP name = IDENTIFIER '.'
+    | import_statement
+    | none_statement
+    ;
+
+import_statement
+    : IMP name = IDENTIFIER '.'
+    ;
+
+none_statement
+    : '.'
     ;
 
 list_of_statements
-    : statement
-    | statement next = list_of_statements
+    : statement next = list_of_statements
+    | statement
     ;
 
 declaration
@@ -82,57 +89,67 @@ list_of_declarations
     ;
 
 variable_declaration
-    : CRAFT ARTIFACT? arg_type = type name = IDENTIFIER BESTOW value = expression '.'
+    : CRAFT ARTIFACT? arg_type = IDENTIFIER name = IDENTIFIER (BESTOW value = expression)? '.'
     ;
 
 function_definition
-    : func_type = type SPELL name = IDENTIFIER SACRIFICE params = list_typed_identifiers ':' statements = list_of_statements TERMINUS
+    : func_type = IDENTIFIER SPELL name = IDENTIFIER SACRIFICE params = list_typed_identifiers ':' statements = list_of_statements TERMINUS
     ;
 
 class_definition
-    : BGNC name = IDENTIFIER statements = list_of_declarations ENC '.'
+    : BGNC name = IDENTIFIER 
+        declarations = list_of_declarations 
+        ENC '.'
     ;
 
 assignment
-    : ENCHANT id = IDENTIFIER WITH value = expression '.'
-    | ENCHANT name = IDENTIFIER OF owner = IDENTIFIER WITH value = expression '.'
+    : ENCHANT expr = expression WITH value = expression '.'
     ;
 
 call
-    : CAST IDENTIFIER SACRIFICE params = list_expressions '.'
-    | CAST name = IDENTIFIER OF owner = IDENTIFIER SACRIFICE params = list_expressions '.'
-    ;
-
-type
-    : POINTS
-    | PRECISE
-    | RUNE
-    | ABSOLUTE
-    | TOME
-    | IDENTIFIER
+    : CAST expr = expression SACRIFICE params = list_expressions '.'
     ;
 
 list_typed_identifiers
-    : type IDENTIFIER
-    | type IDENTIFIER ',' next = list_typed_identifiers
+    : type = IDENTIFIER ',' next = list_typed_identifiers
+    | type = IDENTIFIER
     ;
 
 expression
-    : number_type = NUMBER 
-    | string_type = STRING
-    | minus_expression_type = minus_expression
-    | expression plus = '+' expression
-    | expression plus = '-' expression
-    | expression plus = '/' expression
-    | expression plus = '*' expression
-    | expression plus = '^' expression
+    : basic_type_t = basic_type_expression
+    | named_expression_t = named_expression
+    | minus_expression_t = minus_expression
+    | paren_expression_t = paren_expression
+    | field_expression_t = field_expression
+    | lexpr = expression sign = '+' rexpr = expression
+    | lexpr = expression sign = '-' rexpr = expression
+    | lexpr = expression sign = '/' rexpr = expression
+    | lexpr = expression sign = '*' rexpr = expression
+    | lexpr = expression sign = '^' rexpr = expression
     ;
 
 list_expressions
-    : expression
-    | expression ',' next = list_expressions
+    : expression ',' next = list_expressions
+    | expression
+    ;
+
+basic_type_expression
+    : number_type = NUMBER 
+    | string_type = STRING
     ;
 
 minus_expression
     : '-' expression
+    ;
+
+paren_expression
+    : '(' expression ')'
+    ;
+
+field_expression
+    : IDENTIFIER 'of' expression
+    ;
+
+named_expression
+    : IDENTIFIER
     ;

@@ -8,6 +8,8 @@ import { Headless_documentContext } from "./spelParser";
 import { BlockContext } from "./spelParser";
 import { Block_itemContext } from "./spelParser";
 import { StatementContext } from "./spelParser";
+import { Import_statementContext } from "./spelParser";
+import { None_statementContext } from "./spelParser";
 import { List_of_statementsContext } from "./spelParser";
 import { DeclarationContext } from "./spelParser";
 import { List_of_declarationsContext } from "./spelParser";
@@ -16,11 +18,14 @@ import { Function_definitionContext } from "./spelParser";
 import { Class_definitionContext } from "./spelParser";
 import { AssignmentContext } from "./spelParser";
 import { CallContext } from "./spelParser";
-import { TypeContext } from "./spelParser";
 import { List_typed_identifiersContext } from "./spelParser";
 import { ExpressionContext } from "./spelParser";
 import { List_expressionsContext } from "./spelParser";
+import { Basic_type_expressionContext } from "./spelParser";
 import { Minus_expressionContext } from "./spelParser";
+import { Paren_expressionContext } from "./spelParser";
+import { Field_expressionContext } from "./spelParser";
+import { Named_expressionContext } from "./spelParser";
 
 
 /**
@@ -82,6 +87,28 @@ export interface spelListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitStatement?: (ctx: StatementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.import_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterImport_statement?: (ctx: Import_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.import_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitImport_statement?: (ctx: Import_statementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.none_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterNone_statement?: (ctx: None_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.none_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitNone_statement?: (ctx: None_statementContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `spelParser.list_of_statements`.
@@ -172,17 +199,6 @@ export interface spelListener extends ParseTreeListener {
 	exitCall?: (ctx: CallContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `spelParser.type`.
-	 * @param ctx the parse tree
-	 */
-	enterType?: (ctx: TypeContext) => void;
-	/**
-	 * Exit a parse tree produced by `spelParser.type`.
-	 * @param ctx the parse tree
-	 */
-	exitType?: (ctx: TypeContext) => void;
-
-	/**
 	 * Enter a parse tree produced by `spelParser.list_typed_identifiers`.
 	 * @param ctx the parse tree
 	 */
@@ -216,6 +232,17 @@ export interface spelListener extends ParseTreeListener {
 	exitList_expressions?: (ctx: List_expressionsContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `spelParser.basic_type_expression`.
+	 * @param ctx the parse tree
+	 */
+	enterBasic_type_expression?: (ctx: Basic_type_expressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.basic_type_expression`.
+	 * @param ctx the parse tree
+	 */
+	exitBasic_type_expression?: (ctx: Basic_type_expressionContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `spelParser.minus_expression`.
 	 * @param ctx the parse tree
 	 */
@@ -225,5 +252,38 @@ export interface spelListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitMinus_expression?: (ctx: Minus_expressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.paren_expression`.
+	 * @param ctx the parse tree
+	 */
+	enterParen_expression?: (ctx: Paren_expressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.paren_expression`.
+	 * @param ctx the parse tree
+	 */
+	exitParen_expression?: (ctx: Paren_expressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.field_expression`.
+	 * @param ctx the parse tree
+	 */
+	enterField_expression?: (ctx: Field_expressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.field_expression`.
+	 * @param ctx the parse tree
+	 */
+	exitField_expression?: (ctx: Field_expressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.named_expression`.
+	 * @param ctx the parse tree
+	 */
+	enterNamed_expression?: (ctx: Named_expressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.named_expression`.
+	 * @param ctx the parse tree
+	 */
+	exitNamed_expression?: (ctx: Named_expressionContext) => void;
 }
 

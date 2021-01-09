@@ -214,7 +214,7 @@ class SpelGenerateSourceVisitor extends AbstractParseTreeVisitor_1.AbstractParse
             if (!(type === null || type === void 0 ? void 0 : type.source))
                 return;
             return {
-                source: (this.is_in_class_definition ? 'let ' : '') + ctx.IDENTIFIER() + ' = ' + expr.source,
+                source: (this.is_in_class_definition ? '' : 'let ') + ctx.IDENTIFIER() + ' = ' + expr.source + ';',
                 'type': type === null || type === void 0 ? void 0 : type.source
             };
         }

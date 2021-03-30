@@ -19,6 +19,7 @@ import { Class_definitionContext } from "./spelParser";
 import { AssignmentContext } from "./spelParser";
 import { CallContext } from "./spelParser";
 import { List_typed_identifiersContext } from "./spelParser";
+import { ModificationContext } from "./spelParser";
 import { ExpressionContext } from "./spelParser";
 import { List_expressionsContext } from "./spelParser";
 import { Basic_type_expressionContext } from "./spelParser";
@@ -147,6 +148,13 @@ export interface spelVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitList_typed_identifiers?: (ctx: List_typed_identifiersContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `spelParser.modification`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitModification?: (ctx: ModificationContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `spelParser.expression`.

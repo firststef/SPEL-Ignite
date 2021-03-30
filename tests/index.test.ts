@@ -2,6 +2,17 @@ import { describe, it } from 'mocha';
 import { assert } from 'chai';
 import { compile } from '../src/index';
 
+describe('my test', () => {
+    it('should compile simple test', function shouldCompileSimpleTo() {
+        let testStr = `cast enchant fire with spelfire..`;
+        
+        let res = compile(testStr, false);
+        let x = 0;
+        //assert.equal('Genesis();\nlet basic_attack = 3;', res);
+    });
+});
+
+/*
 describe('compile tests', () => {
     it('should compile simple test', function shouldCompileSimpleTo() {
         let testStr = `
@@ -24,3 +35,4 @@ describe('compile tests', () => {
         assert.equal('Genesis();\nclass Player { mana = 1;}', res);
     });
 });
+*/

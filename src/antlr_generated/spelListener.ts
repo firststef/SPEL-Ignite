@@ -19,6 +19,7 @@ import { Class_definitionContext } from "./spelParser";
 import { AssignmentContext } from "./spelParser";
 import { CallContext } from "./spelParser";
 import { List_typed_identifiersContext } from "./spelParser";
+import { ModificationContext } from "./spelParser";
 import { ExpressionContext } from "./spelParser";
 import { List_expressionsContext } from "./spelParser";
 import { Basic_type_expressionContext } from "./spelParser";
@@ -208,6 +209,17 @@ export interface spelListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitList_typed_identifiers?: (ctx: List_typed_identifiersContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.modification`.
+	 * @param ctx the parse tree
+	 */
+	enterModification?: (ctx: ModificationContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.modification`.
+	 * @param ctx the parse tree
+	 */
+	exitModification?: (ctx: ModificationContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `spelParser.expression`.

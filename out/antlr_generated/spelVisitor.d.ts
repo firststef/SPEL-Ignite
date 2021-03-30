@@ -4,6 +4,8 @@ import { Headless_documentContext } from "./spelParser";
 import { BlockContext } from "./spelParser";
 import { Block_itemContext } from "./spelParser";
 import { StatementContext } from "./spelParser";
+import { Import_statementContext } from "./spelParser";
+import { None_statementContext } from "./spelParser";
 import { List_of_statementsContext } from "./spelParser";
 import { DeclarationContext } from "./spelParser";
 import { List_of_declarationsContext } from "./spelParser";
@@ -12,11 +14,15 @@ import { Function_definitionContext } from "./spelParser";
 import { Class_definitionContext } from "./spelParser";
 import { AssignmentContext } from "./spelParser";
 import { CallContext } from "./spelParser";
-import { TypeContext } from "./spelParser";
 import { List_typed_identifiersContext } from "./spelParser";
+import { ModificationContext } from "./spelParser";
 import { ExpressionContext } from "./spelParser";
 import { List_expressionsContext } from "./spelParser";
+import { Basic_type_expressionContext } from "./spelParser";
 import { Minus_expressionContext } from "./spelParser";
+import { Paren_expressionContext } from "./spelParser";
+import { Field_expressionContext } from "./spelParser";
+import { Named_expressionContext } from "./spelParser";
 /**
  * This interface defines a complete generic visitor for a parse tree produced
  * by `spelParser`.
@@ -55,6 +61,18 @@ export interface spelVisitor<Result> extends ParseTreeVisitor<Result> {
      * @return the visitor result
      */
     visitStatement?: (ctx: StatementContext) => Result;
+    /**
+     * Visit a parse tree produced by `spelParser.import_statement`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitImport_statement?: (ctx: Import_statementContext) => Result;
+    /**
+     * Visit a parse tree produced by `spelParser.none_statement`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitNone_statement?: (ctx: None_statementContext) => Result;
     /**
      * Visit a parse tree produced by `spelParser.list_of_statements`.
      * @param ctx the parse tree
@@ -104,17 +122,17 @@ export interface spelVisitor<Result> extends ParseTreeVisitor<Result> {
      */
     visitCall?: (ctx: CallContext) => Result;
     /**
-     * Visit a parse tree produced by `spelParser.type`.
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    visitType?: (ctx: TypeContext) => Result;
-    /**
      * Visit a parse tree produced by `spelParser.list_typed_identifiers`.
      * @param ctx the parse tree
      * @return the visitor result
      */
     visitList_typed_identifiers?: (ctx: List_typed_identifiersContext) => Result;
+    /**
+     * Visit a parse tree produced by `spelParser.modification`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitModification?: (ctx: ModificationContext) => Result;
     /**
      * Visit a parse tree produced by `spelParser.expression`.
      * @param ctx the parse tree
@@ -128,9 +146,33 @@ export interface spelVisitor<Result> extends ParseTreeVisitor<Result> {
      */
     visitList_expressions?: (ctx: List_expressionsContext) => Result;
     /**
+     * Visit a parse tree produced by `spelParser.basic_type_expression`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitBasic_type_expression?: (ctx: Basic_type_expressionContext) => Result;
+    /**
      * Visit a parse tree produced by `spelParser.minus_expression`.
      * @param ctx the parse tree
      * @return the visitor result
      */
     visitMinus_expression?: (ctx: Minus_expressionContext) => Result;
+    /**
+     * Visit a parse tree produced by `spelParser.paren_expression`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitParen_expression?: (ctx: Paren_expressionContext) => Result;
+    /**
+     * Visit a parse tree produced by `spelParser.field_expression`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitField_expression?: (ctx: Field_expressionContext) => Result;
+    /**
+     * Visit a parse tree produced by `spelParser.named_expression`.
+     * @param ctx the parse tree
+     * @return the visitor result
+     */
+    visitNamed_expression?: (ctx: Named_expressionContext) => Result;
 }

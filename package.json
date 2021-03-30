@@ -24,14 +24,16 @@
     "nyc": "^15.1.0",
     "ts-node": "^9.1.1",
     "tslib": "^1.9.3",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "@types/node": "^14.14.14"
   },
   "dependencies": {
-    "@types/node": "^14.14.14",
     "antlr4": "^4.9.0",
     "antlr4ts": "^0.5.0-alpha.3"
   },
-  "files": ["out/**/*"],
+  "files": [
+    "out/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/firststef/SPEL-Ignite.git"

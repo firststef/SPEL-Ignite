@@ -1,3 +1,5 @@
+import { SourceRange, SpelError, SpelVisitor } from "./spelVisitor";
+
 const antlr4 = require('antlr4');
 const path = require('path');
 
@@ -19,8 +21,17 @@ class ErrorListener extends antlr4.error.ErrorListener {
    * @param {string} message Error message
    * @param {string} payload Stack trace
    */
+
+  constructor(
+    private visitor: SpelVisitor 
+  )
+  {
+    super();
+  }
+
   syntaxError(recognizer: any, symbol: any, line: any, column: any, message: any, payload: any) {
-    throw new SyntaxGenericError({line, column, message});
+    this.visitor.lv(new SpelError(new SourceRange(line, column), message));
+    throw "";
   }
 }
 

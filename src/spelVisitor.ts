@@ -1,7 +1,7 @@
 import { spelVisitor } from './antlr_generated/spelVisitor'
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor'
 import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, spelParser } from './antlr_generated/spelParser'
-import { ParserRuleContext, Token } from 'antlr4ts';
+import { ConsoleErrorListener, ParserRuleContext, Token } from 'antlr4ts';
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 import { ANTLRInputStream, CharStreams, CommonTokenStream } from 'antlr4ts';
 import { spelLexer } from './antlr_generated/spelLexer';
@@ -355,6 +355,10 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         }
     }
 
+    lv(e: SpelError){
+        this.errors.push(e);
+    }
+
     check(value:any, message:string|undefined=undefined){
         if (!value){
             throw new SpelException(message, this);
@@ -388,11 +392,12 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         // Create the lexer and parser
         let inputStream = CharStreams.fromString(code);
         let lexer = new spelLexer(inputStream);
+        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
         let tokenStream = new CommonTokenStream(lexer);
         let parser = new spelParser(tokenStream);
         parser.removeErrorListeners();
 
-        const listener = new ErrorListener();
+        const listener = new ErrorListener(this);
         parser.addErrorListener(listener);
 
         try {
@@ -423,7 +428,9 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
             }   
         }
         catch(e){
-            this.errors.push(new SpelError(new SourceRange(0,0), e.toString()));
+            if (e != "" && e != null){
+                this.errors.push(new SpelError(new SourceRange(0,0), e.toString()));
+            }
             let errs = this.errors;
             return{
                 status: 'fatal',
@@ -475,7 +482,7 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
     visitBlock_item(ctx: Block_itemContext):BlockItem {
         let $ = this;
         if (ctx.statement()){
-            return new BlockItem('statement', this.visitStatement(ctx.statement()));
+            return new BlockItem('statement', undefined, this.visitStatement(ctx.statement()));
         }
         if (ctx.declaration()){
             return new BlockItem('declaration', this.visitDeclaration(ctx.declaration()));
@@ -634,7 +641,7 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
     @catcher
     visitCall(ctx: CallContext):Call{
         let $ = this;
-        $.checkNull(ctx, ctx => ctx.expression(), 'value');
+        $.checkNull(ctx, ctx => ctx._expr, 'expression');
 
         let expr = this.visitExpression(ctx._expr);
         let params: Expression[];
@@ -669,6 +676,7 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
     @catcher
     visitExpression(ctx: ExpressionContext):Expression {
         let $ = this;
+        $.checkNull(ctx, () => true, 'ctx');
 
         if (ctx._basic_type_t){
             return this.visitBasic_type_expression(ctx._basic_type_t);
@@ -688,6 +696,9 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         if (ctx._call_expression_t){
             return this.visitCall(ctx._call_expression_t);
         } 
+        if (ctx._modifaction_expression_t){
+            return this.visitModification(ctx._modifaction_expression_t);
+        }
 
         let lexpr = this.visitExpression(ctx._lexpr);
         let rexpr = this.visitExpression(ctx._rexpr);
@@ -757,134 +768,6 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
 
     unreachable(msg: string){
         this.check(false, msg);
-    }
-}
-
-class SourceGenerator{
-    NEW_LINE: string = '\n';
-    is_in_class_definition: boolean = false;
-
-    generateDocument(ctx: Document): string {
-        let block = this.generateBlock(ctx.block);
-        let declr_block = ctx.declrBlock ? this.generateBlock(ctx.declrBlock) : undefined;
-
-        return declr_block + this.NEW_LINE +
-        'Genesis();' + this.NEW_LINE + 
-        block;
-    }
-
-    generateHeadless_document(ctx: Block): string{
-        return this.generateBlock(ctx);
-    }
-
-    generateBlock(ctx: Block):string {
-        let $ = this;
-        return ctx.items.map((bi) => $.generateBlock_item(bi)).join(this.NEW_LINE);
-    }
-
-    generateBlock_item(ctx: BlockItem):string {
-        if (ctx.which == 'statement'){
-            return this.generateStatement(ctx.statement);
-        }
-        if (ctx.which == 'declaration'){
-            return this.generateDeclaration(ctx.declaration);
-        }
-    }
-
-    generateStatement(ctx: Statement):string {
-        if (ctx.constructor.name == "Assignment"){
-            return this.generateAssignment(<Assignment>ctx);
-        }
-        if (ctx.constructor.name == "Call"){
-            return this.generateCall(<Call>ctx);
-        }
-        if (ctx.constructor.name == "Import"){
-            return this.generateImport_statement(<Import>ctx);
-        }
-        if (ctx.constructor.name == "NoneStatement"){
-            return this.generateNone_statement(<NoneStatement>ctx);
-        }
-        return '';
-    }
-
-    generateImport_statement(ctx: Import): string{
-        return 'let ' + ctx.file + ' = import(' + ctx.file + ')';
-    }
-
-    generateNone_statement(ctx: NoneStatement): string{
-        return ';';
-    }
-
-    generateDeclaration(ctx: Declaration):string {
-        if (ctx.constructor.name == "VariableDeclaration"){
-            return this.generateVariable_declaration(<VariableDeclaration>ctx);
-        }
-        if (ctx.constructor.name == "ClassDefinition"){
-            return this.generateClass_definition(<ClassDefinition>ctx);
-        }
-        if (ctx.constructor.name == "FunctionDefinition"){
-            return this.generateFunction_definition(<FunctionDefinition>ctx);
-        }
-    }
-
-    generateVariable_declaration(ctx: VariableDeclaration):string {
-        let expr;
-        if (ctx.expr){
-            expr = this.generateExpression(ctx.expr);
-        }
-
-        return '';
-        // return (this.is_in_class_definition ? '': 'let ' ) + ctx.name +
-        //     (expr ? ' = ' + expr: '') + ';'
-    }
-
-    generateFunction_definition(ctx: FunctionDefinition):string {
-        let $ = this;
-        let params = ctx.params.map(el => el.name).join(',');
-        let statements = ctx.statements.map(el => $.generateStatement(el)).join($.NEW_LINE);
-        
-        return (this.is_in_class_definition ? 'function ' : '') + ctx.name
-                + '(' + params + ')' + this.NEW_LINE +
-                + '{' +  this.NEW_LINE 
-                + statements + this.NEW_LINE 
-                + '}'
-    }
-
-    generateClass_definition(ctx: ClassDefinition):string {
-        let $ = this;
-        let old_is_in_class_definition = this.is_in_class_definition;
-        this.is_in_class_definition = true;
-        let body = ctx.declarations.map(el=> $.generateDeclaration(el)).join($.NEW_LINE);
-        this.is_in_class_definition = old_is_in_class_definition;
-
-        return 'class ' + ctx.name + ' { ' + body + '}';
-    }
-
-    generateAssignment(ctx: Assignment):string{
-        let expr = this.generateExpression(ctx.expr);
-        let value = this.generateExpression(ctx.value);
-
-        return expr + ' = ' + value + ';';    
-    }
-
-    generateCall(ctx: Call):string{
-        let $ = this;
-        let params = ctx.params.map(p => $.generateExpression(p)).join(',');
-        let expr = this.generateExpression(ctx.expr);
-        
-        return expr + '(' + params + ')' + ';';
-    }
-
-    generateExpression(ctx: Expression){
-        // if (ctx.NUMBER()){
-        //     return this.generateTerminal(ctx.NUMBER());
-        // }
-    }
-
-    generateMinus_expression(ctx: MinusExpression){
-        let expr = this.generateExpression(ctx.value);
-
-        return '-' + expr;
     }
 }
 

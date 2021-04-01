@@ -10,6 +10,7 @@ exports.SourceRange = exports.SpelError = exports.SpelVisitor = void 0;
 const AbstractParseTreeVisitor_1 = require("antlr4ts/tree/AbstractParseTreeVisitor");
 const spelParser_1 = require("./antlr_generated/spelParser");
 const antlr4ts_1 = require("antlr4ts");
+const antlr4ts_2 = require("antlr4ts");
 const spelLexer_1 = require("./antlr_generated/spelLexer");
 const errorListener_1 = require("./errorListener");
 /*
@@ -229,6 +230,9 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
             this.errors.push(new SpelError(new SourceRange(0, 0), e));
         }
     }
+    lv(e) {
+        this.errors.push(e);
+    }
     check(value, message = undefined) {
         if (!value) {
             throw new SpelException(message, this);
@@ -255,12 +259,13 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         }
         this.clear();
         // Create the lexer and parser
-        let inputStream = antlr4ts_1.CharStreams.fromString(code);
+        let inputStream = antlr4ts_2.CharStreams.fromString(code);
         let lexer = new spelLexer_1.spelLexer(inputStream);
-        let tokenStream = new antlr4ts_1.CommonTokenStream(lexer);
+        lexer.removeErrorListener(antlr4ts_1.ConsoleErrorListener.INSTANCE);
+        let tokenStream = new antlr4ts_2.CommonTokenStream(lexer);
         let parser = new spelParser_1.spelParser(tokenStream);
         parser.removeErrorListeners();
-        const listener = new errorListener_1.ErrorListener();
+        const listener = new errorListener_1.ErrorListener(this);
         parser.addErrorListener(listener);
         try {
             let res;
@@ -288,7 +293,9 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
             }
         }
         catch (e) {
-            this.errors.push(new SpelError(new SourceRange(0, 0), e.toString()));
+            if (e != "" && e != null) {
+                this.errors.push(new SpelError(new SourceRange(0, 0), e.toString()));
+            }
             let errs = this.errors;
             return {
                 status: 'fatal',
@@ -326,7 +333,7 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
     visitBlock_item(ctx) {
         let $ = this;
         if (ctx.statement()) {
-            return new BlockItem('statement', this.visitStatement(ctx.statement()));
+            return new BlockItem('statement', undefined, this.visitStatement(ctx.statement()));
         }
         if (ctx.declaration()) {
             return new BlockItem('declaration', this.visitDeclaration(ctx.declaration()));
@@ -444,7 +451,7 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
     }
     visitCall(ctx) {
         let $ = this;
-        $.checkNull(ctx, ctx => ctx.expression(), 'value');
+        $.checkNull(ctx, ctx => ctx._expr, 'expression');
         let expr = this.visitExpression(ctx._expr);
         let params;
         if (ctx._params) {
@@ -469,6 +476,7 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
     }
     visitExpression(ctx) {
         let $ = this;
+        $.checkNull(ctx, () => true, 'ctx');
         if (ctx._basic_type_t) {
             return this.visitBasic_type_expression(ctx._basic_type_t);
         }
@@ -486,6 +494,9 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         }
         if (ctx._call_expression_t) {
             return this.visitCall(ctx._call_expression_t);
+        }
+        if (ctx._modifaction_expression_t) {
+            return this.visitModification(ctx._modifaction_expression_t);
         }
         let lexpr = this.visitExpression(ctx._lexpr);
         let rexpr = this.visitExpression(ctx._rexpr);
@@ -612,111 +623,4 @@ __decorate([
     catcher
 ], SpelVisitor.prototype, "visitNamed_expression", null);
 exports.SpelVisitor = SpelVisitor;
-class SourceGenerator {
-    constructor() {
-        this.NEW_LINE = '\n';
-        this.is_in_class_definition = false;
-    }
-    generateDocument(ctx) {
-        let block = this.generateBlock(ctx.block);
-        let declr_block = ctx.declrBlock ? this.generateBlock(ctx.declrBlock) : undefined;
-        return declr_block + this.NEW_LINE +
-            'Genesis();' + this.NEW_LINE +
-            block;
-    }
-    generateHeadless_document(ctx) {
-        return this.generateBlock(ctx);
-    }
-    generateBlock(ctx) {
-        let $ = this;
-        return ctx.items.map((bi) => $.generateBlock_item(bi)).join(this.NEW_LINE);
-    }
-    generateBlock_item(ctx) {
-        if (ctx.which == 'statement') {
-            return this.generateStatement(ctx.statement);
-        }
-        if (ctx.which == 'declaration') {
-            return this.generateDeclaration(ctx.declaration);
-        }
-    }
-    generateStatement(ctx) {
-        if (ctx.constructor.name == "Assignment") {
-            return this.generateAssignment(ctx);
-        }
-        if (ctx.constructor.name == "Call") {
-            return this.generateCall(ctx);
-        }
-        if (ctx.constructor.name == "Import") {
-            return this.generateImport_statement(ctx);
-        }
-        if (ctx.constructor.name == "NoneStatement") {
-            return this.generateNone_statement(ctx);
-        }
-        return '';
-    }
-    generateImport_statement(ctx) {
-        return 'let ' + ctx.file + ' = import(' + ctx.file + ')';
-    }
-    generateNone_statement(ctx) {
-        return ';';
-    }
-    generateDeclaration(ctx) {
-        if (ctx.constructor.name == "VariableDeclaration") {
-            return this.generateVariable_declaration(ctx);
-        }
-        if (ctx.constructor.name == "ClassDefinition") {
-            return this.generateClass_definition(ctx);
-        }
-        if (ctx.constructor.name == "FunctionDefinition") {
-            return this.generateFunction_definition(ctx);
-        }
-    }
-    generateVariable_declaration(ctx) {
-        let expr;
-        if (ctx.expr) {
-            expr = this.generateExpression(ctx.expr);
-        }
-        return '';
-        // return (this.is_in_class_definition ? '': 'let ' ) + ctx.name +
-        //     (expr ? ' = ' + expr: '') + ';'
-    }
-    generateFunction_definition(ctx) {
-        let $ = this;
-        let params = ctx.params.map(el => el.name).join(',');
-        let statements = ctx.statements.map(el => $.generateStatement(el)).join($.NEW_LINE);
-        return (this.is_in_class_definition ? 'function ' : '') + ctx.name
-            + '(' + params + ')' + this.NEW_LINE +
-            +'{' + this.NEW_LINE
-            + statements + this.NEW_LINE
-            + '}';
-    }
-    generateClass_definition(ctx) {
-        let $ = this;
-        let old_is_in_class_definition = this.is_in_class_definition;
-        this.is_in_class_definition = true;
-        let body = ctx.declarations.map(el => $.generateDeclaration(el)).join($.NEW_LINE);
-        this.is_in_class_definition = old_is_in_class_definition;
-        return 'class ' + ctx.name + ' { ' + body + '}';
-    }
-    generateAssignment(ctx) {
-        let expr = this.generateExpression(ctx.expr);
-        let value = this.generateExpression(ctx.value);
-        return expr + ' = ' + value + ';';
-    }
-    generateCall(ctx) {
-        let $ = this;
-        let params = ctx.params.map(p => $.generateExpression(p)).join(',');
-        let expr = this.generateExpression(ctx.expr);
-        return expr + '(' + params + ')' + ';';
-    }
-    generateExpression(ctx) {
-        // if (ctx.NUMBER()){
-        //     return this.generateTerminal(ctx.NUMBER());
-        // }
-    }
-    generateMinus_expression(ctx) {
-        let expr = this.generateExpression(ctx.value);
-        return '-' + expr;
-    }
-}
 //# sourceMappingURL=spelVisitor.js.map

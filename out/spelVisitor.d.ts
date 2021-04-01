@@ -141,6 +141,7 @@ declare class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implemen
     errors: Array<SpelError>;
     defaultResult(): SpelASTNode;
     le(e: any): void;
+    lv(e: SpelError): void;
     check(value: any, message?: string | undefined): any;
     checkNull(ctx: ParserRuleContext, field_check: (ctx: any) => any, what: string): void;
     ok(): boolean;

@@ -1,3 +1,4 @@
+import { SpelVisitor } from "./spelVisitor";
 declare const antlr4: any;
 /**
  * Custom Error Listener
@@ -5,6 +6,7 @@ declare const antlr4: any;
  * @returns {object}
  */
 declare class ErrorListener extends antlr4.error.ErrorListener {
+    private visitor;
     /**
      * Checks syntax error
      *
@@ -15,6 +17,7 @@ declare class ErrorListener extends antlr4.error.ErrorListener {
      * @param {string} message Error message
      * @param {string} payload Stack trace
      */
+    constructor(visitor: SpelVisitor);
     syntaxError(recognizer: any, symbol: any, line: any, column: any, message: any, payload: any): void;
 }
 export { ErrorListener };

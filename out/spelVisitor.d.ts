@@ -1,6 +1,6 @@
 import { spelVisitor } from './antlr_generated/spelVisitor';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
-import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext } from './antlr_generated/spelParser';
+import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, While_statementContext } from './antlr_generated/spelParser';
 import { ParserRuleContext } from 'antlr4ts';
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 declare class SourceRange {
@@ -89,6 +89,13 @@ declare class NoneStatement implements Statement {
     constructor();
     toString: () => string;
 }
+declare class WhileStatement implements Statement {
+    expr: Expression;
+    stmts: Statement[];
+    type: string;
+    constructor(expr: Expression, stmts: Statement[]);
+    toString: () => string;
+}
 declare class ClassDefinition implements Declaration {
     name: string;
     declarations: Declaration[];
@@ -157,6 +164,7 @@ declare class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implemen
     visitStatement(ctx: StatementContext): Statement;
     visitImport_statement(ctx: Import_statementContext): Import;
     visitNone_statement(ctx: None_statementContext): NoneStatement;
+    visitWhile_statement(ctx: While_statementContext): WhileStatement;
     visitList_of_statements(ctx: List_of_statementsContext): Statement[];
     visitDeclaration(ctx: DeclarationContext): Declaration;
     visitList_of_declarations(ctx: List_of_declarationsContext): Declaration[];

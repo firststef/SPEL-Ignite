@@ -1,6 +1,6 @@
 import { spelVisitor } from './antlr_generated/spelVisitor'
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor'
-import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, spelParser } from './antlr_generated/spelParser'
+import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, spelParser, While_statementContext } from './antlr_generated/spelParser'
 import { ConsoleErrorListener, ParserRuleContext, Token } from 'antlr4ts';
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 import { ANTLRInputStream, CharStreams, CommonTokenStream } from 'antlr4ts';
@@ -225,6 +225,20 @@ class NoneStatement implements Statement{
     type:string;
 
     constructor()
+    {
+        this.type = this.constructor.name;
+    }
+
+    toString = () => JSON.stringify(this)
+}
+
+class WhileStatement implements Statement{
+    type:string;
+
+    constructor(
+        public expr: Expression,
+        public stmts: Statement[]
+    )
     {
         this.type = this.constructor.name;
     }
@@ -505,6 +519,9 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         if (ctx.none_statement()){
             return $.visitNone_statement(ctx.none_statement());
         }
+        if (ctx.while_statement()){
+            return $.visitWhile_statement(ctx.while_statement());
+        }
         $.unreachable("statement unknown");
     }
 
@@ -519,6 +536,19 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
     @catcher
     visitNone_statement(ctx: None_statementContext): NoneStatement{
         return new NoneStatement();
+    }
+
+    @catcher
+    visitWhile_statement(ctx: While_statementContext): WhileStatement {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._expr, "expr");
+
+        const expr = $.visitExpression(ctx._expr);
+        $.check(expr);
+        const stmts = $.visitList_of_statements(ctx._stmts);
+        $.check(stmts);
+        
+        return new WhileStatement(expr, stmts);
     }
 
     @catcher
@@ -630,7 +660,7 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         $.checkNull(ctx, ctx => ctx._value, 'value');
 
         let value = this.visitExpression(ctx._value);
-        let expr = this.visitExpression(ctx._value);
+        let expr = this.visitExpression(ctx._expr);
         $.check(value);
         $.check(expr);
         let mod = new Modification(expr, value);

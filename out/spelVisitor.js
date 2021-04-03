@@ -148,6 +148,14 @@ class NoneStatement {
         this.type = this.constructor.name;
     }
 }
+class WhileStatement {
+    constructor(expr, stmts) {
+        this.expr = expr;
+        this.stmts = stmts;
+        this.toString = () => JSON.stringify(this);
+        this.type = this.constructor.name;
+    }
+}
 class ClassDefinition {
     constructor(name, declarations) {
         this.name = name;
@@ -354,6 +362,9 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         if (ctx.none_statement()) {
             return $.visitNone_statement(ctx.none_statement());
         }
+        if (ctx.while_statement()) {
+            return $.visitWhile_statement(ctx.while_statement());
+        }
         $.unreachable("statement unknown");
     }
     visitImport_statement(ctx) {
@@ -364,6 +375,15 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
     }
     visitNone_statement(ctx) {
         return new NoneStatement();
+    }
+    visitWhile_statement(ctx) {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._expr, "expr");
+        const expr = $.visitExpression(ctx._expr);
+        $.check(expr);
+        const stmts = $.visitList_of_statements(ctx._stmts);
+        $.check(stmts);
+        return new WhileStatement(expr, stmts);
     }
     visitList_of_statements(ctx) {
         let $ = this;
@@ -443,7 +463,7 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         $.checkNull(ctx, ctx => ctx._expr, 'expr');
         $.checkNull(ctx, ctx => ctx._value, 'value');
         let value = this.visitExpression(ctx._value);
-        let expr = this.visitExpression(ctx._value);
+        let expr = this.visitExpression(ctx._expr);
         $.check(value);
         $.check(expr);
         let mod = new Modification(expr, value);
@@ -568,6 +588,9 @@ __decorate([
 __decorate([
     catcher
 ], SpelVisitor.prototype, "visitNone_statement", null);
+__decorate([
+    catcher
+], SpelVisitor.prototype, "visitWhile_statement", null);
 __decorate([
     catcher
 ], SpelVisitor.prototype, "visitList_of_statements", null);

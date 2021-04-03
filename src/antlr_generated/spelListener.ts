@@ -10,6 +10,7 @@ import { Block_itemContext } from "./spelParser";
 import { StatementContext } from "./spelParser";
 import { Import_statementContext } from "./spelParser";
 import { None_statementContext } from "./spelParser";
+import { While_statementContext } from "./spelParser";
 import { List_of_statementsContext } from "./spelParser";
 import { DeclarationContext } from "./spelParser";
 import { List_of_declarationsContext } from "./spelParser";
@@ -110,6 +111,17 @@ export interface spelListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitNone_statement?: (ctx: None_statementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.while_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterWhile_statement?: (ctx: While_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.while_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitWhile_statement?: (ctx: While_statementContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `spelParser.list_of_statements`.

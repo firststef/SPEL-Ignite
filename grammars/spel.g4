@@ -29,6 +29,8 @@ CAST: 'cast';
 TRANSMUTE: 'transmute';
 BECOMES: 'becomes';
 DOT: '.';
+WHILE: 'as long as';
+COLON: ':';
 
 fragment DIGIT: [0-9];
 fragment CHARACTER: [a-zA-Z];
@@ -64,6 +66,7 @@ statement
     : assignment
     | call
     | import_statement
+    | while_statement
     | none_statement
     ;
 
@@ -73,6 +76,10 @@ import_statement
 
 none_statement
     : '.'
+    ;
+
+while_statement
+    : WHILE expr = expression COLON stmts = list_of_statements TERMINUS
     ;
 
 list_of_statements

@@ -74,7 +74,7 @@ class TypedId{
         public typeName: string
     )
     {
-        this.type = this.constructor.name;
+        this.type = "TypedId";
     }
 
     toString = () => JSON.stringify(this)
@@ -90,7 +90,7 @@ class BasicTypeExpression implements Expression {
         public typeName: string
     )
     {
-        this.type = this.constructor.name;
+        this.type = "BasicTypeExpression";
     }
 
     toString = () => JSON.stringify(this)
@@ -103,7 +103,7 @@ class MinusExpression implements Expression{
         public value: Expression
     )
     {
-        this.type = this.constructor.name;
+        this.type = "MinusExpression";
     }
 
     toString = () => JSON.stringify(this)
@@ -118,7 +118,7 @@ class BinaryExpression implements Expression{
         public rExpr: Expression
     )
     {
-        this.type = this.constructor.name;
+        this.type = "BinaryExpression";
     }
 
     toString = () => JSON.stringify(this)
@@ -131,7 +131,7 @@ class ParenExpression implements Expression{
         public expr: Expression
     )
     {
-        this.type = this.constructor.name;
+        this.type = "ParenExpression";
     }
 
     toString = () => JSON.stringify(this)
@@ -145,7 +145,7 @@ class FieldExpression implements Expression{
         public expr: Expression
     )
     {
-        this.type = this.constructor.name;
+        this.type = "FieldExpression";
     }
 
     toString = () => JSON.stringify(this)
@@ -158,7 +158,7 @@ class NamedExpression implements Expression {
         public name: string
     )
     {
-        this.type = this.constructor.name;
+        this.type = "NamedExpression";
     }
 
     toString = () => JSON.stringify(this)
@@ -174,7 +174,7 @@ class Call implements Statement, Expression{
         public params: Expression[]
     )
     {
-        this.type = this.constructor.name;
+        this.type = "Call";
     }
 
     toString = () => JSON.stringify(this)
@@ -188,7 +188,7 @@ class Assignment implements Statement {
         public value: Expression
     )
     {
-        this.type = this.constructor.name;
+        this.type = "Assignment";
     }
 
     toString = () => JSON.stringify(this)
@@ -202,7 +202,7 @@ class Modification implements Statement{
         public value: Expression
     )
     {
-        this.type = this.constructor.name;
+        this.type = "Modification";
     }
 
     toString = () => JSON.stringify(this)
@@ -215,7 +215,7 @@ class Import implements Statement{
         public file: string
     )
     {
-        this.type = this.constructor.name;
+        this.type = "Import";
     }
 
     toString = () => JSON.stringify(this)
@@ -226,7 +226,7 @@ class NoneStatement implements Statement{
 
     constructor()
     {
-        this.type = this.constructor.name;
+        this.type = "NoneStatement";
     }
 
     toString = () => JSON.stringify(this)
@@ -240,7 +240,7 @@ class WhileStatement implements Statement{
         public stmts: Statement[]
     )
     {
-        this.type = this.constructor.name;
+        this.type = "WhileStatement";
     }
 
     toString = () => JSON.stringify(this)
@@ -254,7 +254,7 @@ class ClassDefinition implements Declaration{
         public declarations: Declaration[] 
     )
     {
-        this.type = this.constructor.name;
+        this.type = "ClassDefinition";
     }
 
     toString = () => JSON.stringify(this)
@@ -269,7 +269,7 @@ class FunctionDefinition implements Declaration{
         public statements: Statement[]
     )
     {
-        this.type = this.constructor.name;
+        this.type = "FunctionDefinition";
     }
 
     toString = () => JSON.stringify(this)
@@ -285,7 +285,7 @@ class VariableDeclaration implements Declaration{
         public  expr?: Expression,
     )
     {
-        this.type = this.constructor.name;
+        this.type = "VariableDeclaration";
     }
 
     toString = () => JSON.stringify(this)
@@ -302,7 +302,7 @@ class BlockItem{
         public statement?: Statement
     )
     {
-        this.type = this.constructor.name;
+        this.type = "BlockItem";
     }
 
     toString = () => JSON.stringify(this)
@@ -315,7 +315,7 @@ class Block{
         public items: BlockItem[]
     )
     {
-        this.type = this.constructor.name;
+        this.type = "Block";
     }
 
     toString = () => JSON.stringify(this)
@@ -329,7 +329,7 @@ class Document{
         public declrBlock?: Block
     )
     {
-        this.type = this.constructor.name;
+        this.type = "Document";
     }
 
     toString = () => JSON.stringify(this)

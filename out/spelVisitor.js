@@ -62,7 +62,7 @@ class TypedId {
         this.name = name;
         this.typeName = typeName;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "TypedId";
     }
 }
 class BasicTypeExpression {
@@ -70,14 +70,14 @@ class BasicTypeExpression {
         this.value = value;
         this.typeName = typeName;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "BasicTypeExpression";
     }
 }
 class MinusExpression {
     constructor(value) {
         this.value = value;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "MinusExpression";
     }
 }
 class BinaryExpression {
@@ -86,14 +86,14 @@ class BinaryExpression {
         this.lExpr = lExpr;
         this.rExpr = rExpr;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "BinaryExpression";
     }
 }
 class ParenExpression {
     constructor(expr) {
         this.expr = expr;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "ParenExpression";
     }
 }
 class FieldExpression {
@@ -101,14 +101,14 @@ class FieldExpression {
         this.field = field;
         this.expr = expr;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "FieldExpression";
     }
 }
 class NamedExpression {
     constructor(name) {
         this.name = name;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "NamedExpression";
     }
 }
 class Call {
@@ -116,7 +116,7 @@ class Call {
         this.expr = expr;
         this.params = params;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "Call";
     }
 }
 class Assignment {
@@ -124,7 +124,7 @@ class Assignment {
         this.expr = expr;
         this.value = value;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "Assignment";
     }
 }
 class Modification {
@@ -132,20 +132,20 @@ class Modification {
         this.expr = expr;
         this.value = value;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "Modification";
     }
 }
 class Import {
     constructor(file) {
         this.file = file;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "Import";
     }
 }
 class NoneStatement {
     constructor() {
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "NoneStatement";
     }
 }
 class WhileStatement {
@@ -153,7 +153,7 @@ class WhileStatement {
         this.expr = expr;
         this.stmts = stmts;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "WhileStatement";
     }
 }
 class ClassDefinition {
@@ -161,7 +161,7 @@ class ClassDefinition {
         this.name = name;
         this.declarations = declarations;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "ClassDefinition";
     }
 }
 class FunctionDefinition {
@@ -170,7 +170,7 @@ class FunctionDefinition {
         this.params = params;
         this.statements = statements;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "FunctionDefinition";
     }
 }
 class VariableDeclaration {
@@ -180,7 +180,7 @@ class VariableDeclaration {
         this.isConst = isConst;
         this.expr = expr;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "VariableDeclaration";
     }
 }
 class BlockItem {
@@ -189,14 +189,14 @@ class BlockItem {
         this.declaration = declaration;
         this.statement = statement;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "BlockItem";
     }
 }
 class Block {
     constructor(items) {
         this.items = items;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "Block";
     }
 }
 class Document {
@@ -204,7 +204,7 @@ class Document {
         this.block = block;
         this.declrBlock = declrBlock;
         this.toString = () => JSON.stringify(this);
-        this.type = this.constructor.name;
+        this.type = "Document";
     }
 }
 function catcher(target, propertyKey, descriptor) {

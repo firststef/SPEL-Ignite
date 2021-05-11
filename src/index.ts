@@ -8,8 +8,8 @@ function compile(code: string, program: boolean = false): {status:string, result
     return new SpelVisitor().compile(code, program);
 }
 
-let res = compile('cast enchant fire with spelfire..');
-let x = 0;
+let res = compile('charge fire mana. release from hand.');
+console.log(res);
 
 export{
     compile

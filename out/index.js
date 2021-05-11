@@ -6,6 +6,6 @@ function compile(code, program = false) {
     return new spelVisitor_1.SpelVisitor().compile(code, program);
 }
 exports.compile = compile;
-let res = compile('cast enchant fire with spelfire..');
-let x = 0;
+let res = compile('charge fire mana. release from hand.');
+console.log(res);
 //# sourceMappingURL=index.js.map

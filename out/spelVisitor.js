@@ -10,7 +10,6 @@ exports.SourceRange = exports.SpelError = exports.SpelVisitor = void 0;
 const AbstractParseTreeVisitor_1 = require("antlr4ts/tree/AbstractParseTreeVisitor");
 const spelParser_1 = require("./antlr_generated/spelParser");
 const antlr4ts_1 = require("antlr4ts");
-const antlr4ts_2 = require("antlr4ts");
 const spelLexer_1 = require("./antlr_generated/spelLexer");
 const errorListener_1 = require("./errorListener");
 /*
@@ -156,6 +155,43 @@ class WhileStatement {
         this.type = "WhileStatement";
     }
 }
+class AnyStatement {
+    constructor(value) {
+        this.value = value;
+        this.toString = () => JSON.stringify(this);
+        this.type = "AnyStatement";
+    }
+}
+class ThrowStatement {
+    constructor(object) {
+        this.object = object;
+        this.toString = () => JSON.stringify(this);
+        this.type = "ThrowStatement";
+    }
+}
+class ChargeStatement {
+    constructor(element) {
+        this.element = element;
+        this.toString = () => JSON.stringify(this);
+        this.type = "ChargeStatement";
+    }
+}
+class CreateStatement {
+    constructor(object, holder) {
+        this.object = object;
+        this.holder = holder;
+        this.toString = () => JSON.stringify(this);
+        this.type = "CreateStatement";
+    }
+}
+class PrintStatement {
+    constructor(message, tone) {
+        this.message = message;
+        this.tone = tone;
+        this.toString = () => JSON.stringify(this);
+        this.type = "PrintStatement";
+    }
+}
 class ClassDefinition {
     constructor(name, declarations) {
         this.name = name;
@@ -267,14 +303,15 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         }
         this.clear();
         // Create the lexer and parser
-        let inputStream = antlr4ts_2.CharStreams.fromString(code);
+        let inputStream = antlr4ts_1.CharStreams.fromString(code);
         let lexer = new spelLexer_1.spelLexer(inputStream);
-        lexer.removeErrorListener(antlr4ts_1.ConsoleErrorListener.INSTANCE);
-        let tokenStream = new antlr4ts_2.CommonTokenStream(lexer);
+        lexer.removeErrorListeners();
+        let tokenStream = new antlr4ts_1.CommonTokenStream(lexer);
         let parser = new spelParser_1.spelParser(tokenStream);
         parser.removeErrorListeners();
         const listener = new errorListener_1.ErrorListener(this);
         parser.addErrorListener(listener);
+        lexer.addErrorListener(listener);
         try {
             let res;
             if (headless) {
@@ -286,7 +323,6 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
                 res = this.visit(tree);
             }
             let errs = this.errors;
-            let a = res.toString();
             if (this.ok()) {
                 return {
                     status: 'ok',
@@ -328,15 +364,11 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         let $ = this;
         $.checkNull(ctx, () => true, "block");
         let items = [];
-        let block;
-        if (ctx._current) {
-            block = this.visitBlock(ctx._current);
-            $.check(block);
-            items = items.concat(block.items);
+        for (let bi of ctx.block_item()) {
+            let block_item = this.visitBlock_item(bi);
+            items = items.concat([block_item]);
         }
-        let block_item = ctx._next ? this.visitBlock_item(ctx._next) : this.visitBlock_item(ctx._sole);
-        $.check(block_item);
-        return new Block(items.concat([block_item]));
+        return new Block(items);
     }
     visitBlock_item(ctx) {
         let $ = this;
@@ -365,7 +397,22 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         if (ctx.while_statement()) {
             return $.visitWhile_statement(ctx.while_statement());
         }
-        $.unreachable("statement unknown");
+        if (ctx.print_statement()) {
+            return $.visitAny_statement(ctx.any_statement());
+        }
+        if (ctx.throw_statement()) {
+            return $.visitThrow_statement(ctx.throw_statement());
+        }
+        if (ctx.charge_statement()) {
+            return $.visitCharge_statement(ctx.charge_statement());
+        }
+        if (ctx.create_statement()) {
+            return $.visitCreate_statement(ctx.create_statement());
+        }
+        if (ctx.any_statement()) {
+            return $.visitAny_statement(ctx.any_statement());
+        }
+        throw new SpelException("No valid statement found", $);
     }
     visitImport_statement(ctx) {
         let $ = this;
@@ -385,6 +432,38 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         $.check(stmts);
         return new WhileStatement(expr, stmts);
     }
+    visitAny_statement(ctx) {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx, "identifiers");
+        let out = '';
+        ctx.IDENTIFIER().map(el => el.toString().toLowerCase()).forEach(function (el, idx) {
+            var add = el.toLowerCase();
+            out += (idx === 0 ? add : add[0].toUpperCase() + add.slice(1));
+        });
+        return new AnyStatement(out);
+    }
+    visitThrow_statement(ctx) {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._object, "object");
+        return new ThrowStatement(ctx._object.text);
+    }
+    visitCharge_statement(ctx) {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._el, "element");
+        return new ChargeStatement(ctx._el.text);
+    }
+    visitCreate_statement(ctx) {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._where, "where");
+        $.checkNull(ctx, (ctx) => ctx._object, "object");
+        return new CreateStatement(ctx._object.text, ctx._where.text);
+    }
+    visitPrint_statement(ctx) {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._msg, "message");
+        $.checkNull(ctx, (ctx) => ctx._tone, "tone");
+        return new CreateStatement(ctx._msg.text, ctx._tone.text);
+    }
     visitList_of_statements(ctx) {
         let $ = this;
         $.checkNull(ctx, ctx => ctx.statement(), 'statements');
@@ -399,6 +478,9 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
     }
     visitDeclaration(ctx) {
         let $ = this;
+        if (ctx == null) {
+            throw new SpelException("no valid declaration found", this);
+        }
         if (ctx.variable_declaration()) {
             return $.visitVariable_declaration(ctx.variable_declaration());
         }
@@ -408,7 +490,6 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         if (ctx.function_definition()) {
             return $.visitFunction_definition(ctx.function_definition());
         }
-        $.unreachable("declaration unknown");
     }
     visitList_of_declarations(ctx) {
         let $ = this;
@@ -591,6 +672,21 @@ __decorate([
 __decorate([
     catcher
 ], SpelVisitor.prototype, "visitWhile_statement", null);
+__decorate([
+    catcher
+], SpelVisitor.prototype, "visitAny_statement", null);
+__decorate([
+    catcher
+], SpelVisitor.prototype, "visitThrow_statement", null);
+__decorate([
+    catcher
+], SpelVisitor.prototype, "visitCharge_statement", null);
+__decorate([
+    catcher
+], SpelVisitor.prototype, "visitCreate_statement", null);
+__decorate([
+    catcher
+], SpelVisitor.prototype, "visitPrint_statement", null);
 __decorate([
     catcher
 ], SpelVisitor.prototype, "visitList_of_statements", null);

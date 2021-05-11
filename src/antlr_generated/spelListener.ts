@@ -11,6 +11,7 @@ import { StatementContext } from "./spelParser";
 import { Import_statementContext } from "./spelParser";
 import { None_statementContext } from "./spelParser";
 import { While_statementContext } from "./spelParser";
+import { Print_statementContext } from "./spelParser";
 import { List_of_statementsContext } from "./spelParser";
 import { DeclarationContext } from "./spelParser";
 import { List_of_declarationsContext } from "./spelParser";
@@ -19,6 +20,11 @@ import { Function_definitionContext } from "./spelParser";
 import { Class_definitionContext } from "./spelParser";
 import { AssignmentContext } from "./spelParser";
 import { CallContext } from "./spelParser";
+import { Throw_statementContext } from "./spelParser";
+import { Charge_statementContext } from "./spelParser";
+import { Create_statementContext } from "./spelParser";
+import { HolderContext } from "./spelParser";
+import { Any_statementContext } from "./spelParser";
 import { List_typed_identifiersContext } from "./spelParser";
 import { ModificationContext } from "./spelParser";
 import { ExpressionContext } from "./spelParser";
@@ -124,6 +130,17 @@ export interface spelListener extends ParseTreeListener {
 	exitWhile_statement?: (ctx: While_statementContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `spelParser.print_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterPrint_statement?: (ctx: Print_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.print_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitPrint_statement?: (ctx: Print_statementContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `spelParser.list_of_statements`.
 	 * @param ctx the parse tree
 	 */
@@ -210,6 +227,61 @@ export interface spelListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitCall?: (ctx: CallContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.throw_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterThrow_statement?: (ctx: Throw_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.throw_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitThrow_statement?: (ctx: Throw_statementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.charge_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterCharge_statement?: (ctx: Charge_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.charge_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitCharge_statement?: (ctx: Charge_statementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.create_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterCreate_statement?: (ctx: Create_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.create_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitCreate_statement?: (ctx: Create_statementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.holder`.
+	 * @param ctx the parse tree
+	 */
+	enterHolder?: (ctx: HolderContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.holder`.
+	 * @param ctx the parse tree
+	 */
+	exitHolder?: (ctx: HolderContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `spelParser.any_statement`.
+	 * @param ctx the parse tree
+	 */
+	enterAny_statement?: (ctx: Any_statementContext) => void;
+	/**
+	 * Exit a parse tree produced by `spelParser.any_statement`.
+	 * @param ctx the parse tree
+	 */
+	exitAny_statement?: (ctx: Any_statementContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `spelParser.list_typed_identifiers`.

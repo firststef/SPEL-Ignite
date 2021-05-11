@@ -30,8 +30,7 @@ class ErrorListener extends antlr4.error.ErrorListener {
   }
 
   syntaxError(recognizer: any, symbol: any, line: any, column: any, message: any, payload: any) {
-    this.visitor.lv(new SpelError(new SourceRange(line, column), message));
-    throw "";
+    //this.visitor.lv(new SpelError(new SourceRange(line, column), message));
   }
 }
 

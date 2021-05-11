@@ -1,6 +1,6 @@
 import { spelVisitor } from './antlr_generated/spelVisitor'
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor'
-import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, spelParser, While_statementContext } from './antlr_generated/spelParser'
+import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, spelParser, While_statementContext, Any_statementContext, Throw_statementContext, Charge_statementContext, Create_statementContext, Print_statementContext } from './antlr_generated/spelParser'
 import { ConsoleErrorListener, ParserRuleContext, Token } from 'antlr4ts';
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 import { ANTLRInputStream, CharStreams, CommonTokenStream } from 'antlr4ts';
@@ -246,6 +246,73 @@ class WhileStatement implements Statement{
     toString = () => JSON.stringify(this)
 }
 
+class AnyStatement implements Statement{
+    type:string;
+
+    constructor(
+        public value: string,
+    )
+    {
+        this.type = "AnyStatement";
+    }
+
+    toString = () => JSON.stringify(this)
+}
+
+class ThrowStatement implements Statement{
+    type:string;
+
+    constructor(
+        public object: string,
+    )
+    {
+        this.type = "ThrowStatement";
+    }
+
+    toString = () => JSON.stringify(this)
+}
+
+class ChargeStatement implements Statement{
+    type:string;
+
+    constructor(
+        public element: string,
+    )
+    {
+        this.type = "ChargeStatement";
+    }
+
+    toString = () => JSON.stringify(this)
+}
+
+class CreateStatement implements Statement{
+    type:string;
+
+    constructor(
+        public object: string,
+        public holder: string,
+    )
+    {
+        this.type = "CreateStatement";
+    }
+
+    toString = () => JSON.stringify(this)
+}
+
+class PrintStatement implements Statement{
+    type:string;
+
+    constructor(
+        public message: string,
+        public tone: string,
+    )
+    {
+        this.type = "PrintStatement";
+    }
+
+    toString = () => JSON.stringify(this)
+}
+
 class ClassDefinition implements Declaration{
     type:string;
 
@@ -406,13 +473,14 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         // Create the lexer and parser
         let inputStream = CharStreams.fromString(code);
         let lexer = new spelLexer(inputStream);
-        lexer.removeErrorListener(ConsoleErrorListener.INSTANCE);
+        lexer.removeErrorListeners();
         let tokenStream = new CommonTokenStream(lexer);
         let parser = new spelParser(tokenStream);
         parser.removeErrorListeners();
 
         const listener = new ErrorListener(this);
         parser.addErrorListener(listener);
+        lexer.addErrorListener(listener);
 
         try {
             let res: SpelASTNode;
@@ -426,7 +494,6 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
                 res = this.visit(tree);
             }
             let errs = this.errors;
-            let a  = res.toString();
     
             if (this.ok()){
                 return {
@@ -480,16 +547,12 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         
         let items:BlockItem[] = [];
 
-        let block:Block;
-        if (ctx._current){
-            block = this.visitBlock(ctx._current);
-            $.check(block);
-            items = items.concat(block.items);
+        for(let bi of ctx.block_item()){
+            let block_item = this.visitBlock_item(bi);
+            items = items.concat([block_item]);
         }
-        let block_item = ctx._next ? this.visitBlock_item(ctx._next) : this.visitBlock_item(ctx._sole);
-        $.check(block_item);
 
-        return new Block(items.concat([block_item]));
+        return new Block(items);
     }
 
     @catcher
@@ -522,7 +585,22 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         if (ctx.while_statement()){
             return $.visitWhile_statement(ctx.while_statement());
         }
-        $.unreachable("statement unknown");
+        if (ctx.print_statement()){
+            return $.visitAny_statement(ctx.any_statement());
+        }
+        if (ctx.throw_statement()){
+            return $.visitThrow_statement(ctx.throw_statement());
+        }
+        if (ctx.charge_statement()){
+            return $.visitCharge_statement(ctx.charge_statement());
+        }
+        if (ctx.create_statement()){
+            return $.visitCreate_statement(ctx.create_statement());
+        }
+        if (ctx.any_statement()){
+            return $.visitAny_statement(ctx.any_statement());
+        }
+        throw new SpelException("No valid statement found", $);
     }
 
     @catcher
@@ -552,6 +630,54 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
     }
 
     @catcher
+    visitAny_statement(ctx: Any_statementContext): AnyStatement {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx, "identifiers");
+
+        let out = '';
+        ctx.IDENTIFIER().map(el => el.toString().toLowerCase()).forEach(function (el, idx) {
+            var add = el.toLowerCase();
+            out += (idx === 0 ? add : add[0].toUpperCase() + add.slice(1));
+        });
+        
+        return new AnyStatement(out);
+    }
+
+    @catcher
+    visitThrow_statement(ctx: Throw_statementContext): ThrowStatement {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._object, "object");
+
+        return new ThrowStatement(ctx._object.text);
+    }
+
+    @catcher
+    visitCharge_statement(ctx: Charge_statementContext): ChargeStatement {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._el, "element");
+
+        return new ChargeStatement(ctx._el.text);
+    }
+
+    @catcher
+    visitCreate_statement(ctx: Create_statementContext): CreateStatement {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._where, "where");
+        $.checkNull(ctx, (ctx) => ctx._object, "object");
+
+        return new CreateStatement(ctx._object.text, ctx._where.text);
+    }
+
+    @catcher
+    visitPrint_statement(ctx: Print_statementContext): CreateStatement {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._msg, "message");
+        $.checkNull(ctx, (ctx) => ctx._tone, "tone");
+
+        return new CreateStatement(ctx._msg.text, ctx._tone.text);
+    }
+
+    @catcher
     visitList_of_statements(ctx: List_of_statementsContext):Statement[] {
         let $ = this;
         $.checkNull(ctx, ctx => ctx.statement(), 'statements');
@@ -572,6 +698,9 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
     @catcher
     visitDeclaration(ctx: DeclarationContext):Declaration {
         let $ = this;
+        if (ctx == null){
+            throw new SpelException("no valid declaration found", this);
+        }
         if (ctx.variable_declaration()){
             return $.visitVariable_declaration(ctx.variable_declaration());
         }
@@ -581,7 +710,6 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         if (ctx.function_definition()){
             return $.visitFunction_definition(ctx.function_definition());
         }
-        $.unreachable("declaration unknown");
     }
 
     @catcher

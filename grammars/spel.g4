@@ -31,6 +31,13 @@ BECOMES: 'becomes';
 DOT: '.';
 WHILE: 'as long as';
 COLON: ':';
+THROW: 'throw';
+CHARGE: 'charge';
+MANA: 'mana';
+CREATE: 'create';
+IN: 'in';
+SAY: 'say';
+CHANT: 'chant';
 
 fragment DIGIT: [0-9];
 fragment CHARACTER: [a-zA-Z];
@@ -53,8 +60,7 @@ headless_document
     ;
 
 block
-    :   current = block next = block_item
-    |   sole = block_item
+    : items = block_item+
     ;
 
 block_item
@@ -67,7 +73,12 @@ statement
     | call
     | import_statement
     | while_statement
+    | print_statement
+    | throw_statement
+    | charge_statement
+    | create_statement
     | none_statement
+    | any_statement
     ;
 
 import_statement
@@ -80,6 +91,10 @@ none_statement
 
 while_statement
     : WHILE expr = expression COLON stmts = list_of_statements TERMINUS
+    ;
+
+print_statement
+    : tone = (SAY | CHANT) msg = STRING
     ;
 
 list_of_statements
@@ -118,6 +133,26 @@ assignment
 
 call
     : CAST expr = expression (SACRIFICE params = list_expressions) ? DOT ?
+    ;
+
+throw_statement
+    : THROW object = IDENTIFIER DOT
+    ;
+
+charge_statement
+    : CHARGE el = IDENTIFIER MANA DOT
+    ;
+
+create_statement
+    : CREATE object = IDENTIFIER IN where = holder DOT
+    ;
+
+holder
+    : IDENTIFIER+
+    ;
+
+any_statement
+    : words = IDENTIFIER+ DOT
     ;
 
 list_typed_identifiers

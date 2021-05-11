@@ -44,9 +44,16 @@ export declare class spelParser extends Parser {
     static readonly DOT = 33;
     static readonly WHILE = 34;
     static readonly COLON = 35;
-    static readonly NUMBER = 36;
-    static readonly IDENTIFIER = 37;
-    static readonly STRING = 38;
+    static readonly THROW = 36;
+    static readonly CHARGE = 37;
+    static readonly MANA = 38;
+    static readonly CREATE = 39;
+    static readonly IN = 40;
+    static readonly SAY = 41;
+    static readonly CHANT = 42;
+    static readonly NUMBER = 43;
+    static readonly IDENTIFIER = 44;
+    static readonly STRING = 45;
     static readonly RULE_document = 0;
     static readonly RULE_headless_document = 1;
     static readonly RULE_block = 2;
@@ -55,23 +62,29 @@ export declare class spelParser extends Parser {
     static readonly RULE_import_statement = 5;
     static readonly RULE_none_statement = 6;
     static readonly RULE_while_statement = 7;
-    static readonly RULE_list_of_statements = 8;
-    static readonly RULE_declaration = 9;
-    static readonly RULE_list_of_declarations = 10;
-    static readonly RULE_variable_declaration = 11;
-    static readonly RULE_function_definition = 12;
-    static readonly RULE_class_definition = 13;
-    static readonly RULE_assignment = 14;
-    static readonly RULE_call = 15;
-    static readonly RULE_list_typed_identifiers = 16;
-    static readonly RULE_modification = 17;
-    static readonly RULE_expression = 18;
-    static readonly RULE_list_expressions = 19;
-    static readonly RULE_basic_type_expression = 20;
-    static readonly RULE_minus_expression = 21;
-    static readonly RULE_paren_expression = 22;
-    static readonly RULE_field_expression = 23;
-    static readonly RULE_named_expression = 24;
+    static readonly RULE_print_statement = 8;
+    static readonly RULE_list_of_statements = 9;
+    static readonly RULE_declaration = 10;
+    static readonly RULE_list_of_declarations = 11;
+    static readonly RULE_variable_declaration = 12;
+    static readonly RULE_function_definition = 13;
+    static readonly RULE_class_definition = 14;
+    static readonly RULE_assignment = 15;
+    static readonly RULE_call = 16;
+    static readonly RULE_throw_statement = 17;
+    static readonly RULE_charge_statement = 18;
+    static readonly RULE_create_statement = 19;
+    static readonly RULE_holder = 20;
+    static readonly RULE_any_statement = 21;
+    static readonly RULE_list_typed_identifiers = 22;
+    static readonly RULE_modification = 23;
+    static readonly RULE_expression = 24;
+    static readonly RULE_list_expressions = 25;
+    static readonly RULE_basic_type_expression = 26;
+    static readonly RULE_minus_expression = 27;
+    static readonly RULE_paren_expression = 28;
+    static readonly RULE_field_expression = 29;
+    static readonly RULE_named_expression = 30;
     static readonly ruleNames: string[];
     private static readonly _LITERAL_NAMES;
     private static readonly _SYMBOLIC_NAMES;
@@ -84,12 +97,12 @@ export declare class spelParser extends Parser {
     document(): DocumentContext;
     headless_document(): Headless_documentContext;
     block(): BlockContext;
-    block(_p: number): BlockContext;
     block_item(): Block_itemContext;
     statement(): StatementContext;
     import_statement(): Import_statementContext;
     none_statement(): None_statementContext;
     while_statement(): While_statementContext;
+    print_statement(): Print_statementContext;
     list_of_statements(): List_of_statementsContext;
     declaration(): DeclarationContext;
     list_of_declarations(): List_of_declarationsContext;
@@ -98,6 +111,11 @@ export declare class spelParser extends Parser {
     class_definition(): Class_definitionContext;
     assignment(): AssignmentContext;
     call(): CallContext;
+    throw_statement(): Throw_statementContext;
+    charge_statement(): Charge_statementContext;
+    create_statement(): Create_statementContext;
+    holder(): HolderContext;
+    any_statement(): Any_statementContext;
     list_typed_identifiers(): List_typed_identifiersContext;
     modification(): ModificationContext;
     expression(): ExpressionContext;
@@ -109,7 +127,6 @@ export declare class spelParser extends Parser {
     field_expression(): Field_expressionContext;
     named_expression(): Named_expressionContext;
     sempred(_localctx: RuleContext, ruleIndex: number, predIndex: number): boolean;
-    private block_sempred;
     private expression_sempred;
     static readonly _serializedATN: string;
     static __ATN: ATN;
@@ -137,11 +154,9 @@ export declare class Headless_documentContext extends ParserRuleContext {
     accept<Result>(visitor: spelVisitor<Result>): Result;
 }
 export declare class BlockContext extends ParserRuleContext {
-    _current: BlockContext;
-    _sole: Block_itemContext;
-    _next: Block_itemContext;
-    block(): BlockContext | undefined;
-    block_item(): Block_itemContext;
+    _items: Block_itemContext;
+    block_item(): Block_itemContext[];
+    block_item(i: number): Block_itemContext;
     constructor(parent: ParserRuleContext | undefined, invokingState: number);
     get ruleIndex(): number;
     enterRule(listener: spelListener): void;
@@ -162,7 +177,12 @@ export declare class StatementContext extends ParserRuleContext {
     call(): CallContext | undefined;
     import_statement(): Import_statementContext | undefined;
     while_statement(): While_statementContext | undefined;
+    print_statement(): Print_statementContext | undefined;
+    throw_statement(): Throw_statementContext | undefined;
+    charge_statement(): Charge_statementContext | undefined;
+    create_statement(): Create_statementContext | undefined;
     none_statement(): None_statementContext | undefined;
+    any_statement(): Any_statementContext | undefined;
     constructor(parent: ParserRuleContext | undefined, invokingState: number);
     get ruleIndex(): number;
     enterRule(listener: spelListener): void;
@@ -196,6 +216,18 @@ export declare class While_statementContext extends ParserRuleContext {
     TERMINUS(): TerminalNode;
     expression(): ExpressionContext;
     list_of_statements(): List_of_statementsContext;
+    constructor(parent: ParserRuleContext | undefined, invokingState: number);
+    get ruleIndex(): number;
+    enterRule(listener: spelListener): void;
+    exitRule(listener: spelListener): void;
+    accept<Result>(visitor: spelVisitor<Result>): Result;
+}
+export declare class Print_statementContext extends ParserRuleContext {
+    _tone: Token;
+    _msg: Token;
+    STRING(): TerminalNode;
+    SAY(): TerminalNode | undefined;
+    CHANT(): TerminalNode | undefined;
     constructor(parent: ParserRuleContext | undefined, invokingState: number);
     get ruleIndex(): number;
     enterRule(listener: spelListener): void;
@@ -303,6 +335,63 @@ export declare class CallContext extends ParserRuleContext {
     SACRIFICE(): TerminalNode | undefined;
     DOT(): TerminalNode | undefined;
     list_expressions(): List_expressionsContext | undefined;
+    constructor(parent: ParserRuleContext | undefined, invokingState: number);
+    get ruleIndex(): number;
+    enterRule(listener: spelListener): void;
+    exitRule(listener: spelListener): void;
+    accept<Result>(visitor: spelVisitor<Result>): Result;
+}
+export declare class Throw_statementContext extends ParserRuleContext {
+    _object: Token;
+    THROW(): TerminalNode;
+    DOT(): TerminalNode;
+    IDENTIFIER(): TerminalNode;
+    constructor(parent: ParserRuleContext | undefined, invokingState: number);
+    get ruleIndex(): number;
+    enterRule(listener: spelListener): void;
+    exitRule(listener: spelListener): void;
+    accept<Result>(visitor: spelVisitor<Result>): Result;
+}
+export declare class Charge_statementContext extends ParserRuleContext {
+    _el: Token;
+    CHARGE(): TerminalNode;
+    MANA(): TerminalNode;
+    DOT(): TerminalNode;
+    IDENTIFIER(): TerminalNode;
+    constructor(parent: ParserRuleContext | undefined, invokingState: number);
+    get ruleIndex(): number;
+    enterRule(listener: spelListener): void;
+    exitRule(listener: spelListener): void;
+    accept<Result>(visitor: spelVisitor<Result>): Result;
+}
+export declare class Create_statementContext extends ParserRuleContext {
+    _object: Token;
+    _where: HolderContext;
+    CREATE(): TerminalNode;
+    IN(): TerminalNode;
+    DOT(): TerminalNode;
+    IDENTIFIER(): TerminalNode;
+    holder(): HolderContext;
+    constructor(parent: ParserRuleContext | undefined, invokingState: number);
+    get ruleIndex(): number;
+    enterRule(listener: spelListener): void;
+    exitRule(listener: spelListener): void;
+    accept<Result>(visitor: spelVisitor<Result>): Result;
+}
+export declare class HolderContext extends ParserRuleContext {
+    IDENTIFIER(): TerminalNode[];
+    IDENTIFIER(i: number): TerminalNode;
+    constructor(parent: ParserRuleContext | undefined, invokingState: number);
+    get ruleIndex(): number;
+    enterRule(listener: spelListener): void;
+    exitRule(listener: spelListener): void;
+    accept<Result>(visitor: spelVisitor<Result>): Result;
+}
+export declare class Any_statementContext extends ParserRuleContext {
+    _words: Token;
+    DOT(): TerminalNode;
+    IDENTIFIER(): TerminalNode[];
+    IDENTIFIER(i: number): TerminalNode;
     constructor(parent: ParserRuleContext | undefined, invokingState: number);
     get ruleIndex(): number;
     enterRule(listener: spelListener): void;

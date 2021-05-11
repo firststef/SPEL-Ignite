@@ -48,5 +48,15 @@
                 "<node_internals>/**/*.js"
             ]
         },
+        {
+            "name": "Debug ANTLR4 grammar",
+            "type": "antlr-debug",
+            "request": "launch",
+            "input": "tests/input.spel",
+            "grammar": "grammars/spel.g4",
+            "startRule": "headless_document",
+            "printParseTree": true,
+            "visualParseTree": true
+        }
     ]
 }

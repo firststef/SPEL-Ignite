@@ -4,7 +4,8 @@ import { compile } from '../src/index';
 
 describe('my test', () => {
     it('should compile simple test', function shouldCompileSimpleTo() {
-        let testStr = `cast enchant fire with spelfire..`;
+        let testStr = `charge fire mana.
+        release from hand.`;
         
         let res = compile(testStr, false);
         let x = 0;

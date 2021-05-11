@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ErrorListener = void 0;
-const spelVisitor_1 = require("./spelVisitor");
 const antlr4 = require('antlr4');
 const path = require('path');
 const { SyntaxGenericError } = require('./error/helper');
@@ -26,8 +25,7 @@ class ErrorListener extends antlr4.error.ErrorListener {
         this.visitor = visitor;
     }
     syntaxError(recognizer, symbol, line, column, message, payload) {
-        this.visitor.lv(new spelVisitor_1.SpelError(new spelVisitor_1.SourceRange(line, column), message));
-        throw "";
+        //this.visitor.lv(new SpelError(new SourceRange(line, column), message));
     }
 }
 exports.ErrorListener = ErrorListener;

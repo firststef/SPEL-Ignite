@@ -398,7 +398,7 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
             return $.visitWhile_statement(ctx.while_statement());
         }
         if (ctx.print_statement()) {
-            return $.visitAny_statement(ctx.any_statement());
+            return $.visitPrint_statement(ctx.print_statement());
         }
         if (ctx.throw_statement()) {
             return $.visitThrow_statement(ctx.throw_statement());

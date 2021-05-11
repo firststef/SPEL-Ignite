@@ -121,6 +121,13 @@ declare class CreateStatement implements Statement {
     constructor(object: string, holder: string);
     toString: () => string;
 }
+declare class PrintStatement implements Statement {
+    message: string;
+    tone: string;
+    type: string;
+    constructor(message: string, tone: string);
+    toString: () => string;
+}
 declare class ClassDefinition implements Declaration {
     name: string;
     declarations: Declaration[];
@@ -194,7 +201,7 @@ declare class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implemen
     visitThrow_statement(ctx: Throw_statementContext): ThrowStatement;
     visitCharge_statement(ctx: Charge_statementContext): ChargeStatement;
     visitCreate_statement(ctx: Create_statementContext): CreateStatement;
-    visitPrint_statement(ctx: Print_statementContext): CreateStatement;
+    visitPrint_statement(ctx: Print_statementContext): PrintStatement;
     visitList_of_statements(ctx: List_of_statementsContext): Statement[];
     visitDeclaration(ctx: DeclarationContext): Declaration;
     visitList_of_declarations(ctx: List_of_declarationsContext): Declaration[];

@@ -669,12 +669,12 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
     }
 
     @catcher
-    visitPrint_statement(ctx: Print_statementContext): CreateStatement {
+    visitPrint_statement(ctx: Print_statementContext): PrintStatement {
         let $ = this;
         $.checkNull(ctx, (ctx) => ctx._msg, "message");
         $.checkNull(ctx, (ctx) => ctx._tone, "tone");
 
-        return new CreateStatement(ctx._msg.text, ctx._tone.text);
+        return new PrintStatement(ctx._msg.text, ctx._tone.text);
     }
 
     @catcher

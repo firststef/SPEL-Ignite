@@ -94,7 +94,7 @@ while_statement
     ;
 
 print_statement
-    : tone = (SAY | CHANT) msg = STRING
+    : tone = (SAY | CHANT) msg = STRING DOT
     ;
 
 list_of_statements

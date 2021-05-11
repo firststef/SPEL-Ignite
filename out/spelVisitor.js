@@ -462,7 +462,7 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         let $ = this;
         $.checkNull(ctx, (ctx) => ctx._msg, "message");
         $.checkNull(ctx, (ctx) => ctx._tone, "tone");
-        return new CreateStatement(ctx._msg.text, ctx._tone.text);
+        return new PrintStatement(ctx._msg.text, ctx._tone.text);
     }
     visitList_of_statements(ctx) {
         let $ = this;

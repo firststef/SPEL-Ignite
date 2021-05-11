@@ -225,6 +225,7 @@ export declare class While_statementContext extends ParserRuleContext {
 export declare class Print_statementContext extends ParserRuleContext {
     _tone: Token;
     _msg: Token;
+    DOT(): TerminalNode;
     STRING(): TerminalNode;
     SAY(): TerminalNode | undefined;
     CHANT(): TerminalNode | undefined;

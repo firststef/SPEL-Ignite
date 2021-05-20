@@ -16,11 +16,10 @@ import { Function_definitionContext } from "./spelParser";
 import { Class_definitionContext } from "./spelParser";
 import { AssignmentContext } from "./spelParser";
 import { CallContext } from "./spelParser";
-import { Throw_statementContext } from "./spelParser";
-import { Charge_statementContext } from "./spelParser";
-import { Create_statementContext } from "./spelParser";
 import { HolderContext } from "./spelParser";
-import { Any_statementContext } from "./spelParser";
+import { Create_statementContext } from "./spelParser";
+import { Release_statementContext } from "./spelParser";
+import { Move_statementContext } from "./spelParser";
 import { List_typed_identifiersContext } from "./spelParser";
 import { ModificationContext } from "./spelParser";
 import { ExpressionContext } from "./spelParser";
@@ -141,17 +140,11 @@ export interface spelVisitor<Result> extends ParseTreeVisitor<Result> {
      */
     visitCall?: (ctx: CallContext) => Result;
     /**
-     * Visit a parse tree produced by `spelParser.throw_statement`.
+     * Visit a parse tree produced by `spelParser.holder`.
      * @param ctx the parse tree
      * @return the visitor result
      */
-    visitThrow_statement?: (ctx: Throw_statementContext) => Result;
-    /**
-     * Visit a parse tree produced by `spelParser.charge_statement`.
-     * @param ctx the parse tree
-     * @return the visitor result
-     */
-    visitCharge_statement?: (ctx: Charge_statementContext) => Result;
+    visitHolder?: (ctx: HolderContext) => Result;
     /**
      * Visit a parse tree produced by `spelParser.create_statement`.
      * @param ctx the parse tree
@@ -159,17 +152,17 @@ export interface spelVisitor<Result> extends ParseTreeVisitor<Result> {
      */
     visitCreate_statement?: (ctx: Create_statementContext) => Result;
     /**
-     * Visit a parse tree produced by `spelParser.holder`.
+     * Visit a parse tree produced by `spelParser.release_statement`.
      * @param ctx the parse tree
      * @return the visitor result
      */
-    visitHolder?: (ctx: HolderContext) => Result;
+    visitRelease_statement?: (ctx: Release_statementContext) => Result;
     /**
-     * Visit a parse tree produced by `spelParser.any_statement`.
+     * Visit a parse tree produced by `spelParser.move_statement`.
      * @param ctx the parse tree
      * @return the visitor result
      */
-    visitAny_statement?: (ctx: Any_statementContext) => Result;
+    visitMove_statement?: (ctx: Move_statementContext) => Result;
     /**
      * Visit a parse tree produced by `spelParser.list_typed_identifiers`.
      * @param ctx the parse tree

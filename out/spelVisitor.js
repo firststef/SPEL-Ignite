@@ -162,18 +162,20 @@ class AnyStatement {
         this.type = "AnyStatement";
     }
 }
-class ThrowStatement {
-    constructor(object) {
-        this.object = object;
+class ReleaseStatement {
+    constructor(from) {
+        this.from = from;
         this.toString = () => JSON.stringify(this);
-        this.type = "ThrowStatement";
+        this.type = "ReleaseStatement";
     }
 }
-class ChargeStatement {
-    constructor(element) {
-        this.element = element;
+class MoveStatement {
+    constructor(object, from, to) {
+        this.object = object;
+        this.from = from;
+        this.to = to;
         this.toString = () => JSON.stringify(this);
-        this.type = "ChargeStatement";
+        this.type = "MoveStatement";
     }
 }
 class CreateStatement {
@@ -400,18 +402,18 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         if (ctx.print_statement()) {
             return $.visitPrint_statement(ctx.print_statement());
         }
-        if (ctx.throw_statement()) {
-            return $.visitThrow_statement(ctx.throw_statement());
-        }
-        if (ctx.charge_statement()) {
-            return $.visitCharge_statement(ctx.charge_statement());
-        }
         if (ctx.create_statement()) {
             return $.visitCreate_statement(ctx.create_statement());
         }
-        if (ctx.any_statement()) {
-            return $.visitAny_statement(ctx.any_statement());
+        if (ctx.release_statement()) {
+            return $.visitRelease_statement(ctx.release_statement());
         }
+        if (ctx.move_statement()) {
+            return $.visitMove_statement(ctx.move_statement());
+        }
+        // if (ctx.any_statement()){
+        //     return $.visitAny_statement(ctx.any_statement());
+        // }
         throw new SpelException("No valid statement found", $);
     }
     visitImport_statement(ctx) {
@@ -429,40 +431,47 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         const expr = $.visitExpression(ctx._expr);
         $.check(expr);
         const stmts = $.visitList_of_statements(ctx._stmts);
-        $.check(stmts);
+        // $.check(stmts);
         return new WhileStatement(expr, stmts);
     }
-    visitAny_statement(ctx) {
+    // @catcher
+    // visitAny_statement(ctx: Any_statementContext): AnyStatement {
+    //     let $ = this;
+    //     $.checkNull(ctx, (ctx) => ctx, "identifiers");
+    //     let out = '';
+    //     ctx.IDENTIFIER().map(el => el.toString().toLowerCase()).forEach(function (el, idx) {
+    //         var add = el.toLowerCase();
+    //         out += (idx === 0 ? add : add[0].toUpperCase() + add.slice(1));
+    //     });
+    //     return new AnyStatement(out);
+    // }
+    visitRelease_statement(ctx) {
         let $ = this;
-        $.checkNull(ctx, (ctx) => ctx, "identifiers");
-        let out = '';
-        ctx.IDENTIFIER().map(el => el.toString().toLowerCase()).forEach(function (el, idx) {
-            var add = el.toLowerCase();
-            out += (idx === 0 ? add : add[0].toUpperCase() + add.slice(1));
-        });
-        return new AnyStatement(out);
+        $.checkNull(ctx, (ctx) => ctx._where, "where");
+        return new ReleaseStatement($.visitHolder(ctx._where));
     }
-    visitThrow_statement(ctx) {
+    visitMove_statement(ctx) {
         let $ = this;
         $.checkNull(ctx, (ctx) => ctx._object, "object");
-        return new ThrowStatement(ctx._object.text);
-    }
-    visitCharge_statement(ctx) {
-        let $ = this;
-        $.checkNull(ctx, (ctx) => ctx._el, "element");
-        return new ChargeStatement(ctx._el.text);
+        $.checkNull(ctx, (ctx) => ctx._to, "to");
+        let obj = $.visitExpression(ctx._object);
+        $.check(obj);
+        return new MoveStatement(obj, ctx._from ? $.visitHolder(ctx._from) : '', $.visitHolder(ctx._to));
     }
     visitCreate_statement(ctx) {
         let $ = this;
-        $.checkNull(ctx, (ctx) => ctx._where, "where");
         $.checkNull(ctx, (ctx) => ctx._object, "object");
-        return new CreateStatement(ctx._object.text, ctx._where.text);
+        $.checkNull(ctx, (ctx) => ctx._where, "where");
+        return new CreateStatement(ctx._object.text, $.visitHolder(ctx._where));
+    }
+    visitHolder(ctx) {
+        return ctx.IDENTIFIER().map(el => el.text).join(' ');
     }
     visitPrint_statement(ctx) {
         let $ = this;
         $.checkNull(ctx, (ctx) => ctx._msg, "message");
         $.checkNull(ctx, (ctx) => ctx._tone, "tone");
-        return new PrintStatement(ctx._msg.text, ctx._tone.text);
+        return new PrintStatement(ctx._msg.text.slice(1, -1), ctx._tone.text);
     }
     visitList_of_statements(ctx) {
         let $ = this;
@@ -533,10 +542,10 @@ class SpelVisitor extends AbstractParseTreeVisitor_1.AbstractParseTreeVisitor {
         $.checkNull(ctx, ctx => ctx._expr, 'expr');
         $.checkNull(ctx, ctx => ctx._value, 'value');
         let value = this.visitExpression(ctx._value);
-        let expr = this.visitExpression(ctx._value);
+        let expr = this.visitExpression(ctx._expr);
         $.check(value);
         $.check(expr);
-        let assign = new Modification(expr, value);
+        let assign = new Assignment(expr, value);
         return assign;
     }
     visitModification(ctx) {
@@ -674,13 +683,10 @@ __decorate([
 ], SpelVisitor.prototype, "visitWhile_statement", null);
 __decorate([
     catcher
-], SpelVisitor.prototype, "visitAny_statement", null);
+], SpelVisitor.prototype, "visitRelease_statement", null);
 __decorate([
     catcher
-], SpelVisitor.prototype, "visitThrow_statement", null);
-__decorate([
-    catcher
-], SpelVisitor.prototype, "visitCharge_statement", null);
+], SpelVisitor.prototype, "visitMove_statement", null);
 __decorate([
     catcher
 ], SpelVisitor.prototype, "visitCreate_statement", null);

@@ -16,11 +16,10 @@ import { Function_definitionContext } from "./spelParser";
 import { Class_definitionContext } from "./spelParser";
 import { AssignmentContext } from "./spelParser";
 import { CallContext } from "./spelParser";
-import { Throw_statementContext } from "./spelParser";
-import { Charge_statementContext } from "./spelParser";
-import { Create_statementContext } from "./spelParser";
 import { HolderContext } from "./spelParser";
-import { Any_statementContext } from "./spelParser";
+import { Create_statementContext } from "./spelParser";
+import { Release_statementContext } from "./spelParser";
+import { Move_statementContext } from "./spelParser";
 import { List_typed_identifiersContext } from "./spelParser";
 import { ModificationContext } from "./spelParser";
 import { ExpressionContext } from "./spelParser";
@@ -206,25 +205,15 @@ export interface spelListener extends ParseTreeListener {
      */
     exitCall?: (ctx: CallContext) => void;
     /**
-     * Enter a parse tree produced by `spelParser.throw_statement`.
+     * Enter a parse tree produced by `spelParser.holder`.
      * @param ctx the parse tree
      */
-    enterThrow_statement?: (ctx: Throw_statementContext) => void;
+    enterHolder?: (ctx: HolderContext) => void;
     /**
-     * Exit a parse tree produced by `spelParser.throw_statement`.
+     * Exit a parse tree produced by `spelParser.holder`.
      * @param ctx the parse tree
      */
-    exitThrow_statement?: (ctx: Throw_statementContext) => void;
-    /**
-     * Enter a parse tree produced by `spelParser.charge_statement`.
-     * @param ctx the parse tree
-     */
-    enterCharge_statement?: (ctx: Charge_statementContext) => void;
-    /**
-     * Exit a parse tree produced by `spelParser.charge_statement`.
-     * @param ctx the parse tree
-     */
-    exitCharge_statement?: (ctx: Charge_statementContext) => void;
+    exitHolder?: (ctx: HolderContext) => void;
     /**
      * Enter a parse tree produced by `spelParser.create_statement`.
      * @param ctx the parse tree
@@ -236,25 +225,25 @@ export interface spelListener extends ParseTreeListener {
      */
     exitCreate_statement?: (ctx: Create_statementContext) => void;
     /**
-     * Enter a parse tree produced by `spelParser.holder`.
+     * Enter a parse tree produced by `spelParser.release_statement`.
      * @param ctx the parse tree
      */
-    enterHolder?: (ctx: HolderContext) => void;
+    enterRelease_statement?: (ctx: Release_statementContext) => void;
     /**
-     * Exit a parse tree produced by `spelParser.holder`.
+     * Exit a parse tree produced by `spelParser.release_statement`.
      * @param ctx the parse tree
      */
-    exitHolder?: (ctx: HolderContext) => void;
+    exitRelease_statement?: (ctx: Release_statementContext) => void;
     /**
-     * Enter a parse tree produced by `spelParser.any_statement`.
+     * Enter a parse tree produced by `spelParser.move_statement`.
      * @param ctx the parse tree
      */
-    enterAny_statement?: (ctx: Any_statementContext) => void;
+    enterMove_statement?: (ctx: Move_statementContext) => void;
     /**
-     * Exit a parse tree produced by `spelParser.any_statement`.
+     * Exit a parse tree produced by `spelParser.move_statement`.
      * @param ctx the parse tree
      */
-    exitAny_statement?: (ctx: Any_statementContext) => void;
+    exitMove_statement?: (ctx: Move_statementContext) => void;
     /**
      * Enter a parse tree produced by `spelParser.list_typed_identifiers`.
      * @param ctx the parse tree

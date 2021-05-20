@@ -1,6 +1,6 @@
 import { spelVisitor } from './antlr_generated/spelVisitor'
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor'
-import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, spelParser, While_statementContext, Any_statementContext, Throw_statementContext, Charge_statementContext, Create_statementContext, Print_statementContext } from './antlr_generated/spelParser'
+import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, spelParser, While_statementContext, Create_statementContext, Print_statementContext, Move_statementContext, Release_statementContext, HolderContext } from './antlr_generated/spelParser'
 import { ConsoleErrorListener, ParserRuleContext, Token } from 'antlr4ts';
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 import { ANTLRInputStream, CharStreams, CommonTokenStream } from 'antlr4ts';
@@ -259,27 +259,29 @@ class AnyStatement implements Statement{
     toString = () => JSON.stringify(this)
 }
 
-class ThrowStatement implements Statement{
+class ReleaseStatement implements Statement{
     type:string;
 
     constructor(
-        public object: string,
+        public from: string,
     )
     {
-        this.type = "ThrowStatement";
+        this.type = "ReleaseStatement";
     }
 
     toString = () => JSON.stringify(this)
 }
 
-class ChargeStatement implements Statement{
+class MoveStatement implements Statement{
     type:string;
 
     constructor(
-        public element: string,
+        public object: Expression,
+        public from: string,
+        public to: string,
     )
     {
-        this.type = "ChargeStatement";
+        this.type = "MoveStatement";
     }
 
     toString = () => JSON.stringify(this)
@@ -588,18 +590,18 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         if (ctx.print_statement()){
             return $.visitPrint_statement(ctx.print_statement());
         }
-        if (ctx.throw_statement()){
-            return $.visitThrow_statement(ctx.throw_statement());
-        }
-        if (ctx.charge_statement()){
-            return $.visitCharge_statement(ctx.charge_statement());
-        }
         if (ctx.create_statement()){
             return $.visitCreate_statement(ctx.create_statement());
         }
-        if (ctx.any_statement()){
-            return $.visitAny_statement(ctx.any_statement());
+        if (ctx.release_statement()){
+            return $.visitRelease_statement(ctx.release_statement());
         }
+        if (ctx.move_statement()){
+            return $.visitMove_statement(ctx.move_statement());
+        }
+        // if (ctx.any_statement()){
+        //     return $.visitAny_statement(ctx.any_statement());
+        // }
         throw new SpelException("No valid statement found", $);
     }
 
@@ -624,48 +626,56 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         const expr = $.visitExpression(ctx._expr);
         $.check(expr);
         const stmts = $.visitList_of_statements(ctx._stmts);
-        $.check(stmts);
+        // $.check(stmts);
         
         return new WhileStatement(expr, stmts);
     }
 
-    @catcher
-    visitAny_statement(ctx: Any_statementContext): AnyStatement {
-        let $ = this;
-        $.checkNull(ctx, (ctx) => ctx, "identifiers");
+    // @catcher
+    // visitAny_statement(ctx: Any_statementContext): AnyStatement {
+    //     let $ = this;
+    //     $.checkNull(ctx, (ctx) => ctx, "identifiers");
 
-        let out = '';
-        ctx.IDENTIFIER().map(el => el.toString().toLowerCase()).forEach(function (el, idx) {
-            var add = el.toLowerCase();
-            out += (idx === 0 ? add : add[0].toUpperCase() + add.slice(1));
-        });
+    //     let out = '';
+    //     ctx.IDENTIFIER().map(el => el.toString().toLowerCase()).forEach(function (el, idx) {
+    //         var add = el.toLowerCase();
+    //         out += (idx === 0 ? add : add[0].toUpperCase() + add.slice(1));
+    //     });
         
-        return new AnyStatement(out);
+    //     return new AnyStatement(out);
+    // }
+
+    @catcher
+    visitRelease_statement(ctx: Release_statementContext): ReleaseStatement {
+        let $ = this;
+        $.checkNull(ctx, (ctx) => ctx._where, "where");
+
+        return new ReleaseStatement($.visitHolder(ctx._where));
     }
 
     @catcher
-    visitThrow_statement(ctx: Throw_statementContext): ThrowStatement {
+    visitMove_statement(ctx: Move_statementContext): MoveStatement {
         let $ = this;
         $.checkNull(ctx, (ctx) => ctx._object, "object");
+        $.checkNull(ctx, (ctx) => ctx._to, "to");
 
-        return new ThrowStatement(ctx._object.text);
-    }
+        let obj = $.visitExpression(ctx._object);
+        $.check(obj);
 
-    @catcher
-    visitCharge_statement(ctx: Charge_statementContext): ChargeStatement {
-        let $ = this;
-        $.checkNull(ctx, (ctx) => ctx._el, "element");
-
-        return new ChargeStatement(ctx._el.text);
+        return new MoveStatement(obj, ctx._from?$.visitHolder(ctx._from):'', $.visitHolder(ctx._to));
     }
 
     @catcher
     visitCreate_statement(ctx: Create_statementContext): CreateStatement {
         let $ = this;
-        $.checkNull(ctx, (ctx) => ctx._where, "where");
         $.checkNull(ctx, (ctx) => ctx._object, "object");
+        $.checkNull(ctx, (ctx) => ctx._where, "where");
 
-        return new CreateStatement(ctx._object.text, ctx._where.text);
+        return new CreateStatement(ctx._object.text, $.visitHolder(ctx._where));
+    }
+
+    visitHolder(ctx: HolderContext): string{
+        return ctx.IDENTIFIER().map(el => el.text).join(' ');
     }
 
     @catcher
@@ -674,7 +684,7 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         $.checkNull(ctx, (ctx) => ctx._msg, "message");
         $.checkNull(ctx, (ctx) => ctx._tone, "tone");
 
-        return new PrintStatement(ctx._msg.text, ctx._tone.text);
+        return new PrintStatement(ctx._msg.text.slice(1, -1), ctx._tone.text);
     }
 
     @catcher
@@ -773,10 +783,10 @@ class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implements spelV
         $.checkNull(ctx, ctx => ctx._value, 'value');
 
         let value = this.visitExpression(ctx._value);
-        let expr = this.visitExpression(ctx._value);
+        let expr = this.visitExpression(ctx._expr);
         $.check(value);
         $.check(expr);
-        let assign = new Modification(expr, value);
+        let assign = new Assignment(expr, value);
         
         return assign;
     }

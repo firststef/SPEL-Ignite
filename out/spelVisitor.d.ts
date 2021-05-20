@@ -1,6 +1,6 @@
 import { spelVisitor } from './antlr_generated/spelVisitor';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
-import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, While_statementContext, Any_statementContext, Throw_statementContext, Charge_statementContext, Create_statementContext, Print_statementContext } from './antlr_generated/spelParser';
+import { AssignmentContext, Basic_type_expressionContext, BlockContext, Block_itemContext, CallContext, Class_definitionContext, DeclarationContext, DocumentContext, ExpressionContext, Field_expressionContext, Function_definitionContext, Headless_documentContext, Import_statementContext, List_expressionsContext, List_of_declarationsContext, List_of_statementsContext, List_typed_identifiersContext, Minus_expressionContext, ModificationContext, Named_expressionContext, None_statementContext, Paren_expressionContext, StatementContext, Variable_declarationContext, While_statementContext, Create_statementContext, Print_statementContext, Move_statementContext, Release_statementContext, HolderContext } from './antlr_generated/spelParser';
 import { ParserRuleContext } from 'antlr4ts';
 import { TerminalNode } from 'antlr4ts/tree/TerminalNode';
 declare class SourceRange {
@@ -96,22 +96,18 @@ declare class WhileStatement implements Statement {
     constructor(expr: Expression, stmts: Statement[]);
     toString: () => string;
 }
-declare class AnyStatement implements Statement {
-    value: string;
+declare class ReleaseStatement implements Statement {
+    from: string;
     type: string;
-    constructor(value: string);
+    constructor(from: string);
     toString: () => string;
 }
-declare class ThrowStatement implements Statement {
-    object: string;
+declare class MoveStatement implements Statement {
+    object: Expression;
+    from: string;
+    to: string;
     type: string;
-    constructor(object: string);
-    toString: () => string;
-}
-declare class ChargeStatement implements Statement {
-    element: string;
-    type: string;
-    constructor(element: string);
+    constructor(object: Expression, from: string, to: string);
     toString: () => string;
 }
 declare class CreateStatement implements Statement {
@@ -197,10 +193,10 @@ declare class SpelVisitor extends AbstractParseTreeVisitor<SpelASTNode> implemen
     visitImport_statement(ctx: Import_statementContext): Import;
     visitNone_statement(ctx: None_statementContext): NoneStatement;
     visitWhile_statement(ctx: While_statementContext): WhileStatement;
-    visitAny_statement(ctx: Any_statementContext): AnyStatement;
-    visitThrow_statement(ctx: Throw_statementContext): ThrowStatement;
-    visitCharge_statement(ctx: Charge_statementContext): ChargeStatement;
+    visitRelease_statement(ctx: Release_statementContext): ReleaseStatement;
+    visitMove_statement(ctx: Move_statementContext): MoveStatement;
     visitCreate_statement(ctx: Create_statementContext): CreateStatement;
+    visitHolder(ctx: HolderContext): string;
     visitPrint_statement(ctx: Print_statementContext): PrintStatement;
     visitList_of_statements(ctx: List_of_statementsContext): Statement[];
     visitDeclaration(ctx: DeclarationContext): Declaration;

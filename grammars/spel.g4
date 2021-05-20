@@ -31,13 +31,17 @@ BECOMES: 'becomes';
 DOT: '.';
 WHILE: 'as long as';
 COLON: ':';
-THROW: 'throw';
+// THROW: 'throw';
 CHARGE: 'charge';
 MANA: 'mana';
 CREATE: 'create';
 IN: 'in';
 SAY: 'say';
 CHANT: 'chant';
+RELEASE: 'release';
+FROM: 'from';
+MOVE: 'move';
+TO: 'to';
 
 fragment DIGIT: [0-9];
 fragment CHARACTER: [a-zA-Z];
@@ -74,19 +78,19 @@ statement
     | import_statement
     | while_statement
     | print_statement
-    | throw_statement
-    | charge_statement
     | create_statement
+    | release_statement
+    | move_statement
     | none_statement
-    | any_statement
+    // | any_statement
     ;
 
 import_statement
-    : IMP name = IDENTIFIER '.'
+    : IMP name = IDENTIFIER DOT
     ;
 
 none_statement
-    : '.'
+    : DOT
     ;
 
 while_statement
@@ -135,25 +139,25 @@ call
     : CAST expr = expression (SACRIFICE params = list_expressions) ? DOT ?
     ;
 
-throw_statement
-    : THROW object = IDENTIFIER DOT
-    ;
-
-charge_statement
-    : CHARGE el = IDENTIFIER MANA DOT
+holder
+    : IDENTIFIER+
     ;
 
 create_statement
     : CREATE object = IDENTIFIER IN where = holder DOT
     ;
 
-holder
-    : IDENTIFIER+
+release_statement
+    : RELEASE FROM where = holder DOT
     ;
 
-any_statement
-    : words = IDENTIFIER+ DOT
+move_statement
+    : MOVE object = expression ( FROM from = holder ) ? TO to = holder DOT
     ;
+
+// any_statement
+//     : words = IDENTIFIER+ DOT
+//     ;
 
 list_typed_identifiers
     : type = IDENTIFIER name = IDENTIFIER ',' next = list_typed_identifiers
